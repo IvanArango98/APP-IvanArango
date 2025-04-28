@@ -10,7 +10,8 @@ CREATE PROCEDURE OrderMethods(
     IN p_Transaction VARCHAR(2),
     IN p_OrderID INT,
     IN p_ProductID INT,
-    IN p_Quantity INT
+    IN p_Quantity INT,
+	IN p_ProductsJSON JSON
 )
 BEGIN
     DECLARE v_UserID INT;
@@ -25,11 +26,56 @@ BEGIN
 
     -- Crear Orden Manual (CC)
     IF p_Transaction = 'CC' THEN
-        INSERT INTO `Order` (UserID, ShippingAddress, Status, TotalAmount)
-        VALUES (v_UserID, p_ShippingAddress, COALESCE(p_Status, 'PENDING'), p_TotalAmount);
-        
-        SELECT LAST_INSERT_ID() AS OrderID;
-    END IF;
+    -- Buscar UserID
+    SELECT UserID INTO v_UserID
+    FROM Login
+    WHERE userName = p_UserName;
+
+    -- Insertar orden (total temporalmente 0.0)
+    INSERT INTO `Order` (UserID, ShippingAddress, Status, TotalAmount)
+    VALUES (v_UserID, p_ShippingAddress, COALESCE(p_Status, 'PENDING'), 0);
+
+    SET @newOrderID = LAST_INSERT_ID();
+
+    -- Variables de iteración
+    SET @idx = 0;
+    SET @total = 0.0;
+    SET @json_length = JSON_LENGTH(p_ProductsJSON);
+
+    WHILE @idx < @json_length DO
+        -- Obtener ProductID y Quantity
+        SET @productId = JSON_UNQUOTE(JSON_EXTRACT(p_ProductsJSON, CONCAT('$[', @idx, '].productId')));
+        SET @quantity = JSON_UNQUOTE(JSON_EXTRACT(p_ProductsJSON, CONCAT('$[', @idx, '].quantity')));
+
+        -- Obtener precio unitario
+        SELECT Price INTO @price
+        FROM Product
+        WHERE ID = @productId;
+
+        -- Insertar en OrderItem
+        INSERT INTO OrderItem (OrderID, ProductID, Quantity, Price)
+        VALUES (@newOrderID, @productId, @quantity, @price);
+
+        -- Sumar al total
+        SET @total = @total + (@price * @quantity);
+
+        -- Descontar stock
+        UPDATE Product
+        SET StockQuantity = StockQuantity - @quantity
+        WHERE ID = @productId;
+
+        SET @idx = @idx + 1;
+    END WHILE;
+
+    -- Actualizar total de la orden
+    UPDATE `Order`
+    SET TotalAmount = @total
+    WHERE ID = @newOrderID;
+
+    -- Retornar ID de la orden
+    SELECT @newOrderID AS OrderID;
+END IF;
+
 
     -- Confirmar Compra (Carrito) (CP)
     IF p_Transaction = 'CP' THEN
@@ -80,7 +126,7 @@ BEGIN
     END IF;
 
     -- AGREGAR Producto a Carrito (CA)
-IF p_Transaction = 'CA' THEN
+	IF p_Transaction = 'CA' THEN
     -- Buscar el UserID basado en el username
     SELECT UserID INTO v_UserID
     FROM Login
@@ -112,7 +158,6 @@ IF p_Transaction = 'CA' THEN
         SELECT LAST_INSERT_ID() AS OrderID;
     END IF;
 END IF;
-
 
     -- ACTUALIZAR Producto de Carrito (CU)
     IF p_Transaction = 'CU' THEN

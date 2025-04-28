@@ -21,7 +21,7 @@ public class CartRepository {
 
     public Integer modifyCart(CartRequest cart, String transactionType) throws SQLException {
         return jdbcTemplate.execute((Connection conn) -> {
-            try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(?, NULL, NULL, NULL, ?, ?, ?, ?)}")) {
+            try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(?, NULL, NULL, NULL, ?, ?, ?, ?,NULL)}")) {
                 stmt.setString(1, cart.getUserName());
                 stmt.setString(2, transactionType);
                 stmt.setObject(3, cart.getCartItemId(), Types.INTEGER);
@@ -43,7 +43,7 @@ public class CartRepository {
 
     public Integer RemoveCart(CartRequest cart, String transactionType) throws SQLException {
         return jdbcTemplate.execute((Connection conn) -> {
-            try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(NULL, NULL, NULL, NULL, ?, ?, ?, NULL)}")) {                
+            try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(NULL, NULL, NULL, NULL, ?, ?, ?, NULL,NULL)}")) {                
                 stmt.setString(1, transactionType);
                 stmt.setObject(2, cart.getCartItemId(), Types.INTEGER);
                 stmt.setObject(3, cart.getProductId(), Types.INTEGER);                
@@ -65,7 +65,7 @@ public class CartRepository {
         return jdbcTemplate.execute((Connection conn) -> {
             List<CartRequest> cartItems = new ArrayList<>();
     
-            try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(?, NULL, NULL, NULL, 'CS', NULL, NULL, NULL)}")) {
+            try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(?, NULL, NULL, NULL, 'CS', NULL, NULL, NULL,NULL)}")) {
                 stmt.setString(1, username);
     
                 boolean hasResultSet = stmt.execute();

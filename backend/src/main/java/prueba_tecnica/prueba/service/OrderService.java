@@ -2,6 +2,9 @@ package prueba_tecnica.prueba.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import prueba_tecnica.prueba.api.exception.ResourceNotFoundException;
 import prueba_tecnica.prueba.api.model.OrderRequest;
 import prueba_tecnica.prueba.repository.OrderRepository;
@@ -15,7 +18,7 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Integer createOrder(OrderRequest order) throws SQLException {
+    public Integer createOrder(OrderRequest order) throws SQLException,JsonProcessingException {
         return orderRepository.createOrder(order); // Método que devuelve el ID
     }
 

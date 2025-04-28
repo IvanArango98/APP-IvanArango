@@ -3,6 +3,9 @@ package prueba_tecnica.prueba.api.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import prueba_tecnica.prueba.api.model.ApiResponse;
 import prueba_tecnica.prueba.api.model.OrderRequest;
 import prueba_tecnica.prueba.service.OrderService;
@@ -20,7 +23,7 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/createOrder")
-    public ApiResponse<Map<String, Object>> createOrder(@RequestBody OrderRequest order) throws SQLException {
+    public ApiResponse<Map<String, Object>> createOrder(@RequestBody OrderRequest order) throws SQLException,JsonProcessingException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         order.setUserName(username);
 

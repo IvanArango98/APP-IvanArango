@@ -1,5 +1,7 @@
 package prueba_tecnica.prueba.api.model;
 
+import java.util.List;
+
 public class OrderRequest {
 
     private String userName;
@@ -7,16 +9,18 @@ public class OrderRequest {
     private String status;
     private Double totalAmount;
     private Integer orderId;
+    private List<CartProduct> products;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(String userName, String shippingAddress, String status, Double totalAmount, Integer orderId) {
+    public OrderRequest(String userName, String shippingAddress, String status, Double totalAmount, Integer orderId,List<CartProduct> products) {
         this.userName = userName;
         this.shippingAddress = shippingAddress;
         this.status = status;
         this.totalAmount = totalAmount;
         this.orderId = orderId;
+        this.products = products;
     }
 
     public String getUserName() {
@@ -57,5 +61,13 @@ public class OrderRequest {
 
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
+    }
+
+    public List<CartProduct>getproducts() {
+        return products;
+    }
+
+    public void setproducts(List<CartProduct> products) {
+        this.products = products;
     }
 }
