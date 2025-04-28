@@ -13,7 +13,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long expirationMillis = 86400000; // 1 día
+    private final long expirationMillis = 600000; // 10 minutos
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -45,4 +45,15 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public boolean isTokenExpired(String token) {
+        try {
+            Claims claims = getClaims(token);
+            Date expiration = claims.getExpiration();
+            return expiration.before(new Date()); // true si ya expiró
+        } catch (Exception e) {
+            return true; // Si falla al parsear, lo tratamos como expirado
+        }
+    }
+    
 }

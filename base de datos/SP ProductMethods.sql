@@ -18,6 +18,7 @@ BEGIN
     END IF;
 
     IF p_Transaction = 'UC' THEN
+    IF EXISTS (SELECT 1 FROM Product WHERE ID = p_ID) THEN    
         UPDATE Product
         SET
             Name = COALESCE(NULLIF(p_Name, ''), Name),
@@ -26,14 +27,32 @@ BEGIN
             Price = COALESCE(p_Price, Price),
             StockQuantity = COALESCE(p_StockQuantity, StockQuantity)
         WHERE ID = p_ID;
+        ELSE
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'Producto no encontrado', MYSQL_ERRNO = 404;
+		END IF;
     END IF;
 
     IF p_Transaction = 'DC' THEN
+     IF EXISTS (SELECT 1 FROM Product WHERE ID = p_ID) THEN    
         DELETE FROM Product WHERE ID = p_ID;
+         ELSE
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'Producto no encontrado', MYSQL_ERRNO = 404;
+		END IF;
     END IF;
 
     IF p_Transaction = 'SC' THEN
+     IF EXISTS (SELECT 1 FROM Product WHERE ID = p_ID) THEN    
         SELECT * FROM Product WHERE ID = p_ID;
+        ELSE
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'Producto no encontrado', MYSQL_ERRNO = 404;
+		END IF;
+    END IF;
+    
+     IF p_Transaction = 'SA' THEN     
+        SELECT * FROM Product;   
     END IF;
 
 END $$

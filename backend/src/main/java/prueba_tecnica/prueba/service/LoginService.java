@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import prueba_tecnica.prueba.api.exception.ResourceNotFoundException;
 import prueba_tecnica.prueba.api.model.LoginRequest;
 import prueba_tecnica.prueba.repository.LoginRepository;
+import prueba_tecnica.prueba.security.JwtUtil;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -17,6 +18,8 @@ public class LoginService {
 
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired private JwtUtil jwtUtil;
+
 
     public static String sha256(String input) {
         try {
@@ -56,6 +59,11 @@ public class LoginService {
             if (response == null) {
                 throw new ResourceNotFoundException("Usuario o contraseña incorrectos.");
             }
+             // Generar el token usando el username
+        String token = jwtUtil.generateToken((String) response.get("userName"));
+
+        // Agregar el token al response
+        response.put("token", token);
     
             return response;
         } catch (RuntimeException ex) {
@@ -78,5 +86,12 @@ public class LoginService {
             }
             throw ex;
         }
-    }    
+    }   
+    
+    public boolean verificarToken(String token) {
+        if (jwtUtil.isTokenExpired(token)) {
+            throw new RuntimeException("El token ya expiró.");
+        }
+        return true;
+    }
 }
