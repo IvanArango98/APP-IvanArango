@@ -27,6 +27,12 @@ export function renovarSesion() {
     return sesion;
 }
 
+export function cerrarSesion() {
+    cookies.remove("_s", { path: "/" });  // Borrar cookie
+    localStorage.clear();                // Borrar localStorage
+    window.location.href = "/InicioSesion"; // Redirigir al login
+}
+
 // 👇 esta ahora recibe setError, setOpenModal
 export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal) => {
     setOpenSpinner(true);
@@ -46,15 +52,9 @@ export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal
             cookies.set("_s", token, {
                 path: "/",
                 expires: calculaExpiracionSesion()
-            });
+            }); 
 
-            localStorage.setItem("sesionData", JSON.stringify({
-                user: response.data.value.userName,
-                email: response.data.value.email,
-                loginId: response.data.value.loginId,                
-            }));
-
-            window.location.href = "/ControlRutas?id=" + response.data.value.loginId;
+            window.location.href = "/MainPage";
         } else {
             setErrorMessage(response.data.message || "Error de autenticación");
             setOpenModal(true);
