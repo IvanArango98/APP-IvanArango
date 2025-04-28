@@ -1,0 +1,137 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Importantísimo: evita que el body scrollee */
+}
+
+.Inicio {
+  background-image: url(../../Resources/images/fondoLogin.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.PrincipalLog {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow: hidden;
+}
+
+.container-IniciarSesion {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  text-align: center;
+  max-width: 600PX;
+  width: 100%;
+  padding: 40px 30px;
+  height: 90vh;
+  overflow-y: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.container-IniciarSesion::-webkit-scrollbar {
+  width: 6px;
+}
+
+.container-IniciarSesion::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.LogoLogin {
+  height: 80px;
+  width: auto;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  border-radius: 12px;
+}
+
+.TipoLetra {
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 14px !important;
+}
+
+.MuiAvatar-root.MuiAvatar-circular.MuiAvatar-colorDefault.css-1999axt-MuiAvatar-root {
+  background-color: #10069f;
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary {
+  color: #ffffff !important;
+  font-weight: 600;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: #ffffff !important; 
+  border-radius: 10px !important;
+}
+
+.MuiFormHelperText-root.Mui-error {
+  color: #ff6b6b !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.MuiButtonBase-root {
+  font-weight: 700 !important;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+
+hr {
+  border: none;
+  margin: 20px 0;
+}
+
+button {
+  background-color: #10069f !important;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+a {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #8ab4f8;
+}
+
+@media (max-width: 420px) {
+  .container-IniciarSesion {
+    width: 90% !important;
+    max-width: 350px;
+    padding: 30px 20px;
+    border-radius: 15px;
+  }
+
+  .LogoLogin {
+    height: 70px;
+    margin-bottom: 15px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  a {
+    font-size: 13px;
+  }
+
+  .TipoLetra {
+    font-size: 12px !important;
+  }
+}

@@ -7,7 +7,7 @@ import { Formik } from 'formik';
 import { InputAdornment } from '@mui/material';
 import './Estilo.css'
 import {validate} from './schema'
-import {InicioSesion} from '../helpers/MetodosLogin'
+import {InicioSesion} from '../Helpers/MetodosLogin'
 
 const Formulario = (props) => {  
     const {setOpenSpinner} = props

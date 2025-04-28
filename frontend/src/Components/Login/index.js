@@ -60,7 +60,7 @@ const Login = () => {
               </Link>
             </Box>
             <Box sx={{ mt: 1 }}>
-              <Link href="#" variant="body2" underline="hover" color="#ffffff">
+              <Link href="/Registro" variant="body2" underline="hover" color="#ffffff">
                 ¿No tienes cuenta? Regístrate
               </Link>
             </Box>
