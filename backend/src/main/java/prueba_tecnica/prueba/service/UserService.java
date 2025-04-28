@@ -4,7 +4,7 @@
     import org.springframework.stereotype.Service;
 
 import prueba_tecnica.prueba.api.exception.ResourceNotFoundException;
-import prueba_tecnica.prueba.api.model.User;
+import prueba_tecnica.prueba.api.model.UserRequest;
     import prueba_tecnica.prueba.repository.UserRepository;
 
     import java.sql.SQLException;
@@ -21,7 +21,7 @@ import prueba_tecnica.prueba.api.model.User;
             return email != null && email.matches(emailRegex);
         }
 
-        public void createUser(User user) throws SQLException {
+        public void createUser(UserRequest user) throws SQLException {
             if (!isValidEmail(user.getEmail())) {
                 throw new RuntimeException("Formato de correo electrónico inválido.");
             }
@@ -29,7 +29,7 @@ import prueba_tecnica.prueba.api.model.User;
             userRepository.userMethods(user, "CC");
         }
 
-        public void updateUser(User user) throws SQLException {
+        public void updateUser(UserRequest user) throws SQLException {
             try{
             userRepository.userMethods(user, "UC");
         } catch (RuntimeException ex) {
@@ -42,7 +42,7 @@ import prueba_tecnica.prueba.api.model.User;
 
         public void deleteUser(Integer id) throws SQLException {
             try {
-                User user = new User(id, null, null, null, null, null, null, null, null, null, id, null, id, null, id);
+                UserRequest user = new UserRequest(id, null, null, null, null, null, null, null, null, null, id, null, id, null, id);
                 userRepository.userMethods(user, "DC");
             } catch (RuntimeException ex) {
                 if (ex.getMessage() != null && ex.getMessage().contains("Usuario no encontrado")) {
@@ -52,7 +52,7 @@ import prueba_tecnica.prueba.api.model.User;
             }
         }
                 
-        public User getUserById(Integer id) throws SQLException {
+        public UserRequest getUserById(Integer id) throws SQLException {
             try
             {
             return userRepository.getUserById(id,"SC");
@@ -64,7 +64,7 @@ import prueba_tecnica.prueba.api.model.User;
         }
         }        
 
-        public List<User> getAllUsers() throws SQLException {
+        public List<UserRequest> getAllUsers() throws SQLException {
             return userRepository.getAllUsers();
         }
     }

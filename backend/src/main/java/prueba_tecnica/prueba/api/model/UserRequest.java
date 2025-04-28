@@ -1,6 +1,6 @@
 package prueba_tecnica.prueba.api.model;
 
-public class User {
+public class UserRequest {
 
     private Integer id;
     private String firstName;
@@ -20,7 +20,7 @@ public class User {
     private String municipalityName;
     private Integer municipalityCode;
 
-    public User(int id, String firstName,String secondName,String firstLastName, String secondLastName,String email,String phoneNumber,String dateOfBirth,
+    public UserRequest(int id, String firstName,String secondName,String firstLastName, String secondLastName,String email,String phoneNumber,String dateOfBirth,
     String address, String countryName,Integer countryCode, String cityName,Integer cityCode,String municipalityName, Integer municipalityCode) 
     {
         this.id = id;

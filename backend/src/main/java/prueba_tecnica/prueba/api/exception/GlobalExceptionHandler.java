@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import prueba_tecnica.prueba.api.model.ApiErrorResponse;
 
+import java.sql.SQLException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -20,6 +22,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ApiErrorResponse<Void> handleRuntimeException(RuntimeException ex) {
+        // Detectar si viene un error 409 desde MySQL
+        if (ex.getCause() instanceof SQLException sqlEx) {
+            if (sqlEx.getErrorCode() == 409) {
+                return new ApiErrorResponse<>(409, "Conflict", "Nombre de usuario ya existe.", "userName", null);
+            }
+            if (sqlEx.getErrorCode() == 404) {
+                return new ApiErrorResponse<>(404, "Not Found", "Usuario no encontrado.", "email", null);
+            }
+        }
+
         return new ApiErrorResponse<>(400, "Bad Request", ex.getMessage(), null, null);
     }
 

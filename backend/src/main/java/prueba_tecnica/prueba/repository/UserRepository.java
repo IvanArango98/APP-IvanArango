@@ -3,7 +3,7 @@ package prueba_tecnica.prueba.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import prueba_tecnica.prueba.api.model.User;
+import prueba_tecnica.prueba.api.model.UserRequest;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ public class UserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void userMethods(User user, String transactionType) throws SQLException {
+    public void userMethods(UserRequest user, String transactionType) throws SQLException {
         jdbcTemplate.execute((Connection conn) -> {
             try (CallableStatement stmt = conn.prepareCall("{CALL UserMethods(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
 
@@ -47,7 +47,7 @@ public class UserRepository {
         });
     }
 
-    public User getUserById(Integer id,String tran) throws SQLException {
+    public UserRequest getUserById(Integer id,String tran) throws SQLException {
         return jdbcTemplate.execute((Connection conn) -> {
             try (CallableStatement stmt = conn.prepareCall("{CALL UserMethods(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
     
@@ -75,7 +75,7 @@ public class UserRepository {
                 if (hasResultSet) {
                     try (var rs = stmt.getResultSet()) {
                         if (rs.next()) {
-                            User user = new User(id, null, null, null, null, null, null, null, null, null, id, null, id, null, id);
+                            UserRequest user = new UserRequest(id, null, null, null, null, null, null, null, null, null, id, null, id, null, id);
                             user.setId(rs.getInt("ID"));
                             user.setfirstName(rs.getString("FirstName"));
                             user.setsecondName(rs.getString("SecondName"));
@@ -100,9 +100,9 @@ public class UserRepository {
         });
     }
 
-    public List<User> getAllUsers() throws SQLException {
+    public List<UserRequest> getAllUsers() throws SQLException {
     return jdbcTemplate.execute((Connection conn) -> {
-        List<User> users = new ArrayList<>();
+        List<UserRequest> users = new ArrayList<>();
 
         try (CallableStatement stmt = conn.prepareCall("{CALL UserMethods(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}")) {
             // Setear parámetros: Todos null excepto el Transaction = 'SA'
@@ -128,7 +128,7 @@ public class UserRepository {
             if (hasResultSet) {
                 try (var rs = stmt.getResultSet()) {
                     while (rs.next()) {
-                        User user = new User(
+                        UserRequest user = new UserRequest(
                             rs.getInt("ID"),
                             rs.getString("FirstName"),
                             rs.getString("SecondName"),
