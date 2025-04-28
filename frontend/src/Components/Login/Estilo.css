@@ -5,7 +5,7 @@
   background-size: cover;    
   height: 100vh;   
 }
- 
+
 .PrincipalLog {
   display: flex;
   align-items: center;
@@ -14,8 +14,8 @@
 }
 
 .container-IniciarSesion {
-  background: rgba(255, 255, 255, 0.1); /* Más limpio, semitransparente */
-  backdrop-filter: blur(10px); /* efecto glassmorphism */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   padding: 40px 30px;
   border-radius: 20px;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -71,4 +71,40 @@ button {
   background-color: #10069f !important;
   border-radius: 8px;
   font-size: 16px;
+}
+
+a {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #8ab4f8;
+}
+
+@media (max-width: 420px) {
+  .container-IniciarSesion {
+    width: 90% !important;
+    max-width: 350px;
+    padding: 30px 20px;
+    border-radius: 15px;
+  }
+
+  .LogoLogin {
+    height: 70px;
+    margin-bottom: 15px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  a {
+    font-size: 13px;
+  }
+
+  .TipoLetra {
+    font-size: 12px !important;
+  }
 }
