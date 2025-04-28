@@ -20,8 +20,21 @@ public class OrderService {
     }
 
     public void confirmOrder(OrderRequest order) throws SQLException {
-        orderRepository.confirmOrder(order);
+        try {
+            orderRepository.confirmOrder(order);
+        } catch (RuntimeException ex) {
+            if (ex.getMessage() != null) {
+                if (ex.getMessage().contains("carrito")) {
+                    throw new ResourceNotFoundException("El carrito está vacío o no se puede confirmar la orden.");
+                }
+                if (ex.getMessage().contains("Orden no encontrada")) {
+                    throw new ResourceNotFoundException("La orden no existe para confirmar.");
+                }
+            }
+            throw ex;
+        }
     }
+    
 
     public void updateOrder(OrderRequest order) throws SQLException {
         try {

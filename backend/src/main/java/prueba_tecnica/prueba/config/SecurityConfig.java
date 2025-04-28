@@ -17,15 +17,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login/**").permitAll() // Permitimos login y registro SIN token
-                .anyRequest().authenticated()                // Todo lo demás exige token
-            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(
+                "/api/login/**",
+                "/api/users/createUser"
+            ).permitAll()
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+}
+
 }
