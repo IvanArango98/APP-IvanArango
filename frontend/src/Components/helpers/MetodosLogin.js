@@ -1,51 +1,71 @@
-import { isUndefined }  from 'util'
-import Cookies from 'universal-cookie'
+import axios from 'axios';
+import { isUndefined } from 'util';
+import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
-//que calcula que el token expire en 30 mins
-export function calculaExpiracionSesion()
-{
+export function calculaExpiracionSesion() {
     const now = new Date().getTime();
-    const newDate = now + 60 * 85 * 1000
-    return new Date(newDate)
+    const newDate = now + 60 * 85 * 1000;
+    return new Date(newDate);
 }
 
-//metodo que valida si la sesion ya finalizo
-export function getSession()
-{
-    return isUndefined(cookies.get("_s")) ? false : cookies.get("_s")
+export function getSession() {
+    return isUndefined(cookies.get("_s")) ? false : cookies.get("_s");
 }
 
-//metodo que redirecciona al login si el token paso sus 30 mins
-export function renovarSesion()
-{
-    const sesion = getSession()    
-    
-    if(!sesion)   
-    {        
+export function renovarSesion() {
+    const sesion = getSession();
+    if (!sesion) {
         localStorage.clear();
-        window.location.href = "/InicioSesion"
-    }       
-    else{
-        cookies.set("_s",sesion,{
-            path: "/", 
-            expires: calculaExpiracionSesion()     
-        })
-    }    
-
+        window.location.href = "/InicioSesion";
+    } else {
+        cookies.set("_s", sesion, {
+            path: "/",
+            expires: calculaExpiracionSesion(),
+        });
+    }
     return sesion;
 }
 
-export const InicioSesion = (Data,setOpenSpinner) => {  
-    let token = "123456"    
-    
-    cookies.set("_s",token,{
-        path: "/", 
-        expires: calculaExpiracionSesion()
+// 👇 esta ahora recibe setError, setOpenModal
+export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal) => {
+    setOpenSpinner(true);
+
+    axios.post('http://localhost:8080/api/login/authenticate', {
+        userName: Data.user,
+        password: Data.password
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        withCredentials: true
     })
-    localStorage.setItem("sesionData",JSON.stringify({            
-        user: Data.user,
-        rol: "Administrador"        
-    }))    
-    window.location.href = "/ControlRutas?id=12345"                 
-}
+    .then(response => {
+        if (response.data.code === 200) {
+            const token = response.data.value.token;
+            cookies.set("_s", token, {
+                path: "/",
+                expires: calculaExpiracionSesion()
+            });
+
+            localStorage.setItem("sesionData", JSON.stringify({
+                user: response.data.value.userName,
+                email: response.data.value.email,
+                loginId: response.data.value.loginId,                
+            }));
+
+            window.location.href = "/ControlRutas?id=" + response.data.value.loginId;
+        } else {
+            setErrorMessage(response.data.message || "Error de autenticación");
+            setOpenModal(true);
+        }
+    })
+    .catch(error => {
+        console.error("Error al iniciar sesión:", error);
+        setErrorMessage(error.response?.data?.message || "Error de conexión o credenciales inválidas.");
+        setOpenModal(true);
+    })
+    .finally(() => {
+        setOpenSpinner(false);
+    });
+};
