@@ -191,7 +191,7 @@ END IF;
     END IF;
     
     -- CONSULTAR Carrito (CS)
-			IF p_Transaction = 'CS' THEN
+	IF p_Transaction = 'CS' THEN
 				SELECT 
 			c.ID AS CartItemID,
 			l.userName,
@@ -207,19 +207,57 @@ END IF;
     END IF;
 
     -- Actualizar Orden Manualmente (UC)
-    IF p_Transaction = 'UC' THEN
-        IF EXISTS (SELECT 1 FROM `Order` WHERE ID = p_OrderID) THEN
+	IF p_Transaction = 'UC' THEN
+    IF EXISTS (SELECT 1 FROM `Order` WHERE ID = p_OrderID) THEN
+        -- Actualizar datos básicos de la orden
+        UPDATE `Order`
+        SET
+            ShippingAddress = COALESCE(NULLIF(p_ShippingAddress, ''), ShippingAddress),
+            Status = COALESCE(p_Status, Status)
+        WHERE ID = p_OrderID;
+
+        -- SOLO si se manda p_ProductsJSON
+        IF p_ProductsJSON IS NOT NULL THEN
+            -- Eliminar productos anteriores
+            DELETE FROM OrderItem
+            WHERE OrderID = p_OrderID;
+
+            -- Variables de iteración
+            SET @idx = 0;
+            SET @total = 0.0;
+            SET @json_length = JSON_LENGTH(p_ProductsJSON);
+
+            WHILE @idx < @json_length DO
+                -- Obtener ProductID y Quantity
+                SET @productId = JSON_UNQUOTE(JSON_EXTRACT(p_ProductsJSON, CONCAT('$[', @idx, '].productId')));
+                SET @quantity = JSON_UNQUOTE(JSON_EXTRACT(p_ProductsJSON, CONCAT('$[', @idx, '].quantity')));
+
+                -- Obtener precio unitario
+                SELECT Price INTO @price
+                FROM Product
+                WHERE ID = @productId;
+
+                -- Insertar en OrderItem
+                INSERT INTO OrderItem (OrderID, ProductID, Quantity, Price)
+                VALUES (p_OrderID, @productId, @quantity, @price);
+
+                -- Sumar al nuevo total
+                SET @total = @total + (@price * @quantity);
+
+                SET @idx = @idx + 1;
+            END WHILE;
+
+            -- Actualizar TotalAmount con el nuevo total
             UPDATE `Order`
-            SET
-                ShippingAddress = COALESCE(NULLIF(p_ShippingAddress, ''), ShippingAddress),
-                Status = COALESCE(p_Status, Status),
-                TotalAmount = COALESCE(p_TotalAmount, TotalAmount)
+            SET TotalAmount = @total
             WHERE ID = p_OrderID;
-        ELSE
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Orden no encontrada', MYSQL_ERRNO = 404;
         END IF;
+
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Orden no encontrada', MYSQL_ERRNO = 404;
     END IF;
+END IF;
 
     -- Eliminar Orden (DC)
     IF p_Transaction = 'DC' THEN
