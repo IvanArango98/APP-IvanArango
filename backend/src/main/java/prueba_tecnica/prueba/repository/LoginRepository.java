@@ -3,8 +3,6 @@ package prueba_tecnica.prueba.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import prueba_tecnica.prueba.api.exception.ResourceNotFoundException;
 import prueba_tecnica.prueba.api.model.LoginRequest;
 
 import java.sql.CallableStatement;
