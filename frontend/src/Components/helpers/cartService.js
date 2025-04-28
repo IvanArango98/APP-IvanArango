@@ -32,7 +32,7 @@ export const actualizarCarrito = async (cartItemId, productId, quantity) => {
   );
 };
 
-// Este endpoint de eliminar no me lo diste, normalmente sería así:
+// Este endpoint de eliminar
 export const eliminarDelCarrito = async (cartItemId, productId) => {
   return axios.delete(`${API_URL}/cart/delete`, { 
     data: { cartItemId, productId }, 

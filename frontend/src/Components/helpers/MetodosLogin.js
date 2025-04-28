@@ -33,7 +33,6 @@ export function cerrarSesion() {
     window.location.href = "/InicioSesion"; // Redirigir al login
 }
 
-// 👇 esta ahora recibe setError, setOpenModal
 export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal) => {
     setOpenSpinner(true);
 

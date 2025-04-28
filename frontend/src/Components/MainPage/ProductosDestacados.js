@@ -23,7 +23,6 @@ function ProductosDestacados({ carrito, setCarrito }) {
       .catch(error => console.error('Error en la consulta de productos:', error));
   }, []);
 
-  // 👇 Esta es la función que va a agregar el producto tanto en el backend como en el estado local
   const handleAgregarAlCarrito = async (producto) => {
     try {
       await agregarAlCarrito(producto.id, 1); // 1 de cantidad inicial
@@ -58,8 +57,7 @@ function ProductosDestacados({ carrito, setCarrito }) {
           <div className="product-card-content">
             <h2>{producto.name}</h2>
             <p>{producto.description}</p>
-            <p className="price">Q{producto.price}</p>
-            {/* 👇 Aquí conectas el botón */}
+            <p className="price">Q{producto.price}</p>            
             <button className="add-to-cart" onClick={() => handleAgregarAlCarrito(producto)}>
               Agregar al carrito
             </button>

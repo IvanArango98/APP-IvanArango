@@ -7,7 +7,7 @@ import './Estilo.css';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Logo from '../../Resources/Logos/Logo.png';
-import Link from '@mui/material/Link'; // <-- IMPORTANTE
+import Link from '@mui/material/Link';
 
 function Copyright(props) {
   return (
