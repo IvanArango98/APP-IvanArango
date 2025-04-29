@@ -38,7 +38,7 @@ END IF;
     IF p_Transaction = 'SC' THEN
         -- Autenticar usuario        
         SELECT 
-            l.ID AS LoginID,
+            l.UserID AS LoginID,
             l.userName,
             u.Email,
             l.status

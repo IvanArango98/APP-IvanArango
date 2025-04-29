@@ -32,8 +32,8 @@ BEGIN
     WHERE userName = p_UserName;
 
     -- Insertar orden (total temporalmente 0.0)
-    INSERT INTO `Order` (UserID, ShippingAddress, Status, TotalAmount)
-    VALUES (v_UserID, p_ShippingAddress, COALESCE(p_Status, 'PENDING'), 0);
+    INSERT INTO `Order` (UserID, ShippingAddress, Status, TotalAmount,ProductsJSON)
+    VALUES (v_UserID, p_ShippingAddress, COALESCE(p_Status, 'PENDING'), 0,p_ProductsJSON);
 
     SET @newOrderID = LAST_INSERT_ID();
 
@@ -213,6 +213,7 @@ END IF;
         UPDATE `Order`
         SET
             ShippingAddress = COALESCE(NULLIF(p_ShippingAddress, ''), ShippingAddress),
+            ProductsJSON = p_ProductsJSON,
             Status = COALESCE(p_Status, Status)
         WHERE ID = p_OrderID;
 
