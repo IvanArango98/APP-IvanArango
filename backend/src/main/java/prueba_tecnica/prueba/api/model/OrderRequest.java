@@ -10,18 +10,39 @@ public class OrderRequest {
     private Double totalAmount;
     private Integer orderId;
     private List<CartProduct> products;
+    private String FechaOrden;
+    private String FechaConfirmacion;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(String userName, String shippingAddress, String status, Double totalAmount, Integer orderId,List<CartProduct> products) {
+    public OrderRequest(String userName, String shippingAddress, String status, Double totalAmount, Integer orderId,List<CartProduct> products,String FechaOrden,String FechaConfirmacion) {
         this.userName = userName;
         this.shippingAddress = shippingAddress;
         this.status = status;
         this.totalAmount = totalAmount;
         this.orderId = orderId;
         this.products = products;
+        this.FechaOrden = FechaOrden;
+        this.FechaConfirmacion = FechaConfirmacion;
     }
+
+    public String getFechaOrden() {
+        return FechaOrden;
+    }
+
+    public void setFechaOrden(String FechaOrden) {
+        this.FechaOrden = FechaOrden;
+    }
+
+    public String getFechaConfirmacion() {
+        return FechaConfirmacion;
+    }
+
+    public void setFechaConfirmacion(String FechaConfirmacion) {
+        this.FechaConfirmacion = FechaConfirmacion;
+    }
+
 
     public String getUserName() {
         return userName;

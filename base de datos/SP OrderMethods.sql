@@ -295,7 +295,10 @@ END IF;
             l.userName,
             o.ShippingAddress,
             o.Status,
-            o.TotalAmount
+            o.TotalAmount,
+            o.ProductsJSON,
+            o.CreatedDate,
+            o.UpdatedDate
         FROM `Order` o
         INNER JOIN Login l ON o.UserID = l.UserID;
     END IF;

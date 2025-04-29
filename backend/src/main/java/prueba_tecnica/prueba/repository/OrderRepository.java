@@ -5,8 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import prueba_tecnica.prueba.api.model.CartProduct;
 import prueba_tecnica.prueba.api.model.OrderRequest;
 
 import java.sql.CallableStatement;
@@ -154,30 +156,47 @@ public class OrderRepository {
     }
     
     public List<OrderRequest> getAllOrders() throws SQLException {
-        return jdbcTemplate.execute((Connection conn) -> {
-            List<OrderRequest> orders = new ArrayList<>();
-    
-            try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL)}")) {
-                stmt.setString(1, "SA"); // p_Transaction = 'SA' (Select All orders)
-    
-                boolean hasResultSet = stmt.execute();
-                if (hasResultSet) {
-                    try (ResultSet rs = stmt.getResultSet()) {
-                        while (rs.next()) {
-                            OrderRequest order = new OrderRequest();
-                            order.setOrderId(rs.getInt("OrderID"));
-                            order.setUserName(rs.getString("userName"));
-                            order.setShippingAddress(rs.getString("ShippingAddress"));
-                            order.setStatus(rs.getString("Status"));
-                            order.setTotalAmount(rs.getDouble("TotalAmount"));                            
-                            orders.add(order);
+    return jdbcTemplate.execute((Connection conn) -> {
+        List<OrderRequest> orders = new ArrayList<>();
+
+        try (CallableStatement stmt = conn.prepareCall("{CALL OrderMethods(NULL, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL)}")) {
+            stmt.setString(1, "SA"); // p_Transaction = 'SA' (Select All orders)
+
+            boolean hasResultSet = stmt.execute();
+            if (hasResultSet) {
+                try (ResultSet rs = stmt.getResultSet()) {
+                    ObjectMapper mapper = new ObjectMapper(); // Para deserializar el JSON
+
+                    while (rs.next()) {
+                        OrderRequest order = new OrderRequest();
+                        order.setOrderId(rs.getInt("OrderID"));
+                        order.setUserName(rs.getString("userName"));
+                        order.setShippingAddress(rs.getString("ShippingAddress"));
+                        order.setStatus(rs.getString("Status"));
+                        order.setTotalAmount(rs.getDouble("TotalAmount"));
+
+                        // 🔥 Deserializar JSON de productos
+                        String json = rs.getString("ProductsJSON");
+                        if (json != null && !json.isEmpty()) {
+                            List<CartProduct> productList = mapper.readValue(
+                                json, mapper.getTypeFactory().constructCollectionType(List.class, CartProduct.class));
+                            order.setproducts(productList);
                         }
+                        order.setFechaOrden(rs.getString("CreatedDate"));
+                        order.setFechaConfirmacion(rs.getString("CreatedDate"));
+                        orders.add(order);
                     }
+                } catch (JsonMappingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (JsonProcessingException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
-                return orders;
             }
-        });
-    }
-    
+            return orders;
+        }
+    });
+}
 }
 
