@@ -16,33 +16,46 @@ const OrdenesUsuario = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const ordersResponse = await fetch('http://localhost:8080/api/orders/getAllOrders', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include'
-        });
-
-        const productsResponse = await fetch('http://localhost:8080/api/products/getAllProducts', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include'
-        });
-
+      try {        
+        const userName = localStorage.getItem('userName'); 
+        console.log(userName,token)
+  
+        if (!token || !userName) {
+          throw new Error('Faltan datos de autenticación');
+        }
+  
+        const [ordersResponse, productsResponse] = await Promise.all([
+          fetch('http://localhost:8080/api/orders/getAllOrders', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          }),
+          fetch('http://localhost:8080/api/products/getAllProducts', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          })
+        ]);
+  
         if (!ordersResponse.ok || !productsResponse.ok) {
           throw new Error('Error en la consulta de órdenes o productos');
         }
-
+  
         const ordersData = await ordersResponse.json();
         const productsData = await productsResponse.json();
-
-        setOrdenes(ordersData.value || []);
+  
+        // Filtrar órdenes por el userName guardado
+        const filteredOrders = (ordersData.value || []).filter(
+          (orden) => orden.userName === userName
+        );
+  
+        setOrdenes(filteredOrders);
         setProductos(productsData.value || []);
       } catch (error) {
         console.error('Error al obtener datos:', error);
@@ -50,9 +63,10 @@ const OrdenesUsuario = () => {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   const getNombreProducto = (productId) => {
     const producto = productos.find(p => p.id === productId);

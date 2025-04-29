@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -8,10 +8,11 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Logo from '../../Resources/Logos/Logo.png';
 import Link from '@mui/material/Link';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
 function Copyright(props) {
   return (
-    <Typography 
+    <Typography
       className='TipoLetra'
       align="center"
       {...props}
@@ -23,39 +24,47 @@ function Copyright(props) {
   );
 }
 
-const Login = () => {     
-  const [openSpinner, setOpenSpinner] = useState(false);  
-  
-  return (           
-    <div className="Inicio"> 
-      <div className="PrincipalLog">   
+const Login = () => {
+  const [openSpinner, setOpenSpinner] = useState(false);
+  const [openForgotModal, setOpenForgotModal] = useState(false); // Estado para el modal
+
+  return (
+    <div className="Inicio">
+      <div className="PrincipalLog">
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={openSpinner}
         >
           <CircularProgress color="inherit" />
-        </Backdrop>         
-        <Container    
-          className="container-IniciarSesion"             
-          maxWidth="xs" 
-          fixed={true}          
-        >            
+        </Backdrop>
+
+        <Container
+          className="container-IniciarSesion"
+          maxWidth="xs"
+          fixed={true}
+        >
           <Box
-            sx={{            
+            sx={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
-          >                                  
-            <img className="LogoLogin" src={Logo} alt="Logo Online Shopping" />                  
-            
-            <Box component="form" noValidate sx={{ mt: 1 }}>          
-              <Formulario setOpenSpinner={setOpenSpinner} />     
+          >
+            <img className="LogoLogin" src={Logo} alt="Logo Online Shopping" />
+
+            <Box component="form" noValidate sx={{ mt: 1 }}>
+              <Formulario setOpenSpinner={setOpenSpinner} />
             </Box>
 
             {/* Links de ayuda */}
             <Box sx={{ mt: 2 }}>
-              <Link href="#" variant="body2" underline="hover" color="#ffffff">
+              <Link
+                href="#"
+                variant="body2"
+                underline="hover"
+                color="#ffffff"
+                onClick={() => setOpenForgotModal(true)}
+              >
                 ¿Olvidaste tu contraseña?
               </Link>
             </Box>
@@ -66,11 +75,17 @@ const Login = () => {
             </Box>
 
             <Copyright sx={{ mt: 5, mb: 2 }} />
-          </Box>        
-        </Container>                   
-      </div>                                                               
-    </div>    
+          </Box>
+        </Container>
+
+        {/* Modal de recuperación */}
+        <ForgotPasswordModal
+          open={openForgotModal}
+          onClose={() => setOpenForgotModal(false)}
+        />
+      </div>
+    </div>
   );
-}
+};
 
 export default Login;

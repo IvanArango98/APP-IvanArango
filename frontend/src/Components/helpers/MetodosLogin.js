@@ -49,6 +49,7 @@ export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal
         if (response.data.code === 200) {
             const token = response.data.value.token;
             const loginId = response.data.value.loginId;
+            const userName = response.data.value.userName;
 
             // Guardamos el token en cookies
             cookies.set("_s", token, {
@@ -58,6 +59,7 @@ export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal
 
             // Guardamos el loginId en localStorage
             localStorage.setItem('loginId', loginId);
+            localStorage.setItem('userName', userName);
 
             // Redirigimos a MainPage
             window.location.href = "/MainPage";
