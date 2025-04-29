@@ -72,6 +72,38 @@ public class LoginRepository {
                 return null;
             }
         });
-    }        
+    }  
+    
+    public String requestPasswordReset(String email) throws SQLException {
+        return jdbcTemplate.execute((Connection conn) -> {
+            try (CallableStatement stmt = conn.prepareCall("{CALL ForgotOrResetPassword(?, NULL, NULL, ?)}")) {
+                stmt.setString(1, email);
+                stmt.setString(2, "RT");
+    
+                boolean hasResultSet = stmt.execute();
+                if (hasResultSet) {
+                    try (ResultSet rs = stmt.getResultSet()) {
+                        if (rs.next()) {
+                            return rs.getString("resetPasswordToken");
+                        }
+                    }
+                }
+                throw new SQLException("No se pudo generar el token");
+            }
+        });
+    }
+    
+    public void resetPassword(String token, String newPassword) throws SQLException {
+        jdbcTemplate.execute((Connection conn) -> {
+            try (CallableStatement stmt = conn.prepareCall("{CALL ForgotOrResetPassword(NULL, ?, ?, ?)}")) {
+                stmt.setString(1, token);
+                stmt.setString(2, newPassword);
+                stmt.setString(3, "RC");
+                stmt.execute();
+                return null;
+            }
+        });
+    }
+    
 
 }

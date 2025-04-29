@@ -69,5 +69,5 @@ public class OrderController {
     public ApiResponse<List<OrderRequest>> getAllOrders() throws SQLException {
         List<OrderRequest> orders = orderService.getAllOrders();
         return new ApiResponse<>(200, "Órdenes consultadas correctamente.", orders);
-    }
+    }    
 }

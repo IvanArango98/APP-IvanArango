@@ -29,9 +29,22 @@ public class LoginController {
     }
 
     @PostMapping("/changePassword")
-public ApiResponse<Void> changePassword(@RequestBody LoginRequest loginRequest) throws SQLException {
-    loginService.changePassword(loginRequest);
-    return new ApiResponse<>(200, "Contraseña actualizada correctamente.", null);
-}
+    public ApiResponse<Void> changePassword(@RequestBody LoginRequest loginRequest) throws SQLException {
+        loginService.changePassword(loginRequest);
+        return new ApiResponse<>(200, "Contraseña actualizada correctamente.", null);
+    }
 
+    @PostMapping("/forgotPassword")
+    public ApiResponse<String> forgotPassword(@RequestBody LoginRequest loginRequest) throws SQLException {
+        String token = loginService.requestPasswordReset(loginRequest.getEmail());
+        return new ApiResponse<>(200, "Token de recuperación generado correctamente.", token);
+    }
+
+    @PostMapping("/resetPassword")
+    public ApiResponse<Void> resetPassword(@RequestBody Map<String, String> body) throws SQLException {
+        String token = body.get("token");
+        String newPassword = body.get("newPassword");
+        loginService.resetPassword(token, newPassword);
+        return new ApiResponse<>(200, "Contraseña restablecida correctamente.", null);
+    }
 }

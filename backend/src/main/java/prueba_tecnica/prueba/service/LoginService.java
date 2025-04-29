@@ -94,4 +94,19 @@ public class LoginService {
         }
         return true;
     }
+
+    @Autowired
+    private EmailService emailService;
+
+    public String requestPasswordReset(String email) throws SQLException {
+        String token = loginRepository.requestPasswordReset(email);
+        emailService.sendPasswordResetEmail(email, token);
+        return token;
+    }
+    
+    public void resetPassword(String token, String newPassword) throws SQLException {
+        String encryptedPassword = sha256(newPassword);
+        loginRepository.resetPassword(token, encryptedPassword);
+    }
+    
 }
