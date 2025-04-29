@@ -1,56 +1,85 @@
 import React, { useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemAvatar, ListItemText, IconButton, Avatar, Button, Modal } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { eliminarDelCarrito, confirmarOrden } from '../Helpers/cartService';
+import { eliminarDelCarrito, actualizarOrden, confirmarOrden,eliminarOrden,actualizarCarrito } from '../Helpers/cartService';
 import { cerrarSesion } from '../Helpers/MetodosLogin';
 
-const CarritoCompras = ({ carrito, setCarrito }) => {
+const CarritoCompras = ({ carrito, setCarrito, idOrden, setIdOrden }) => {
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openErrorModal, setOpenErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const eliminarProducto = async (id) => {
+  const [errorMessage, setErrorMessage] = useState("");  
+  
+  
+  const eliminarProducto = async (idProducto) => {
     try {
-      const item = carrito.find((item) => item.id === id);
-      if (item) {
-        await eliminarDelCarrito(item.id, item.idOrden);
-        setCarrito(carrito.filter(item => item.id !== id));
+      const item = carrito.find((item) => item.id === idProducto);
+  
+      if (!item) return;
+  
+      if (item.cantidad > 1) {
+        // 👇 Solo bajamos la cantidad si hay más de 1
+        await actualizarCarrito(item.cartItemId, item.id, item.cantidad - 1);
+  
+        // Actualizar carrito en frontend
+        const nuevoCarrito = carrito.map(p => 
+          p.id === idProducto 
+            ? { ...p, cantidad: p.cantidad - 1 } 
+            : p
+        );
+        setCarrito(nuevoCarrito);
+  
+        // Actualizar orden
+        const productosActualizar = nuevoCarrito.map(item => ({
+          productId: item.id,
+          quantity: item.cantidad
+        }));        
+        await actualizarOrden(idOrden ?? item.idOrden, "Ciudad de Guatemala, Zona 10", productosActualizar);
+  
+      } else {
+        // 👇 Si solo queda 1, lo eliminamos completameidProductonte
+        await eliminarDelCarrito(idProducto,item.cartItemId);
+  
+        const nuevoCarrito = carrito.filter(p => p.id !== idProducto);
+        setCarrito(nuevoCarrito);
+  
+        if (nuevoCarrito.length > 0) {
+          const productosActualizar = nuevoCarrito.map(item => ({
+            productId: item.id,
+            quantity: item.cantidad
+          }));
+          await actualizarOrden(idOrden ?? item.idOrden, "Ciudad de Guatemala, Zona 10", productosActualizar);
+        } else {
+          // 🚨 Carrito vacío → eliminar la orden
+          await eliminarOrden(idOrden ?? item.idOrden);          
+        }
       }
+  
     } catch (error) {
-      console.error('Error al eliminar producto:', error);
-      setErrorMessage('❌ Error al eliminar producto del carrito.');
-      setOpenErrorModal(true);
+      console.error('Error al eliminar o actualizar producto del carrito:', error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        cerrarSesion();
+      } else {
+        setErrorMessage('❌ Error al eliminar producto del carrito.');
+        setOpenErrorModal(true);
+      }
     }
   };
+  
 
   const confirmarCompra = async () => {
     try {
-      // Verificar que haya carrito
       if (carrito.length === 0) {
         setErrorMessage("⚠️ El carrito está vacío.");
         setOpenErrorModal(true);
         return;
       }
 
-      // Agrupar los productos
-      const productos = carrito.map(item => ({
-        productId: item.id,
-        quantity: item.cantidad
-      }));
-
-      // Tomamos el primer idOrden que tengamos en carrito (todos los productos deberían compartirlo)
-      const idOrden = carrito[0]?.idOrden;
-      const shippingAddress = "Ciudad de Guatemala, Zona 10";
-
-      if (idOrden) {
-        await confirmarOrden(idOrden, shippingAddress);
-        setOpenSuccessModal(true);
-        setCarrito([]);
-      } else {
-        throw new Error("ID de Orden no encontrado.");
-      }
+      await confirmarOrden(idOrden, "Ciudad de Guatemala, Zona 10");
+      setOpenSuccessModal(true);
+      setCarrito([]);
+      setIdOrden(null); // Reseteamos el idOrden porque ya se confirmó
     } catch (error) {
-      console.error('Error al confirmar pedido:', error);
+      console.error('Error al confirmar el pedido:', error);
       if (error.response?.status === 401 || error.response?.status === 403) {
         cerrarSesion();
       } else {
@@ -101,7 +130,7 @@ const CarritoCompras = ({ carrito, setCarrito }) => {
         Confirmar Pedido
       </Button>
 
-      {/* Modal de Confirmación Exitosa */}
+      {/* Modal de éxito */}
       <Modal
         open={openSuccessModal}
         onClose={() => setOpenSuccessModal(false)}
@@ -123,7 +152,7 @@ const CarritoCompras = ({ carrito, setCarrito }) => {
             ¡Pedido Confirmado!
           </Typography>
           <Typography id="modal-success-description" sx={{ mt: 2 }}>
-            Gracias por tu compra. Pronto recibirás tu pedido.
+            Gracias por tu compra.
           </Typography>
           <Button
             sx={{ mt: 3 }}
@@ -136,7 +165,7 @@ const CarritoCompras = ({ carrito, setCarrito }) => {
         </Box>
       </Modal>
 
-      {/* Modal de Error */}
+      {/* Modal de error */}
       <Modal
         open={openErrorModal}
         onClose={() => setOpenErrorModal(false)}
@@ -152,8 +181,7 @@ const CarritoCompras = ({ carrito, setCarrito }) => {
           bgcolor: 'background.paper',
           borderRadius: '12px',
           boxShadow: 24,
-          p: 4,
-          textAlign: 'center'
+          p: 4
         }}>
           <Typography id="modal-error-title" variant="h5" color="error" fontWeight="bold">
             ❌ Error
@@ -171,7 +199,6 @@ const CarritoCompras = ({ carrito, setCarrito }) => {
           </Button>
         </Box>
       </Modal>
-
     </Box>
   );
 };

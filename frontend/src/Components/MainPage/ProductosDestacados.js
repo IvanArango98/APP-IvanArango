@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './ProductosDestacados.css';
 import Cookies from 'universal-cookie';
-import { agregarAlCarrito } from '../Helpers/cartService';
-import { cerrarSesion } from '../Helpers/MetodosLogin'; 
+import { agregarAlCarrito, actualizarCarrito, crearOrden, actualizarOrden, getCart } from '../Helpers/cartService';
+import { cerrarSesion } from '../Helpers/MetodosLogin';
 import { Modal, Box, Typography, Button } from '@mui/material';
 
 const cookies = new Cookies();
 
-function ProductosDestacados({ carrito, setCarrito }) {
+function ProductosDestacados({ carrito, setCarrito, idOrden, setIdOrden }) {
   const [productos, setProductos] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -44,29 +44,54 @@ function ProductosDestacados({ carrito, setCarrito }) {
   }, []);
 
   const handleAgregarAlCarrito = async (producto) => {
-    try {
-      const response = await agregarAlCarrito(producto.id, 1); 
-      const idOrden = response?.value?.idOrden;
+    try {      
+      let idOrdenActual = idOrden;
+      
+      // Si no hay orden creada, primero crearla
+      if (!idOrdenActual) {
+        const nuevaOrden = await crearOrden("Ciudad de Guatemala, Zona 10", [{
+          productId: producto.id,
+          quantity: 1
+        }]);
+        idOrdenActual = nuevaOrden.value.idOrden;
+        setIdOrden(idOrdenActual);
+      }
 
-      const productoEnCarrito = carrito.find(item => item.id === producto.id);
+      // Obtener carrito actualizado
+      const cartResponse = await getCart();
+      const productoEnCarrito = cartResponse.value.find(item => item.productId === producto.id);
 
       if (productoEnCarrito) {
-        const nuevoCarrito = carrito.map(item =>
-          item.id === producto.id 
-            ? { ...item, cantidad: item.cantidad + 1 }
-            : item
-        );
-        setCarrito(nuevoCarrito);
+        // Producto ya existe en carrito → actualizar cantidad
+        await actualizarCarrito(productoEnCarrito.cartItemId, producto.id, productoEnCarrito.quantity + 1);
       } else {
-        setCarrito([...carrito, { 
-          id: producto.id, 
-          nombre: producto.name, 
-          precio: producto.price, 
-          cantidad: 1, 
-          imagen: producto.imageURL,
-          idOrden: idOrden 
-        }]);
+        // Producto NO existe → agregar al carrito
+        await agregarAlCarrito(producto.id, 1);
       }
+
+      // Actualizar el carrito del frontend
+        const updatedCart = await getCart();
+        setCarrito(updatedCart.value.map(item => {
+          const productoOriginal = productos.find(p => p.id === item.productId); // 🔥 buscar en productos
+          return {
+            id: item.productId,
+            nombre: item.productName,
+            precio: item.price,
+            cantidad: item.quantity,
+            imagen: productoOriginal?.imageURL || '', // 🔥 si no encuentra imagen, dejar vacío
+            cartItemId: item.cartItemId,
+            idOrden: idOrdenActual
+          };
+        }));
+
+
+      // Siempre actualizar la orden
+      const productosActualizar = updatedCart.value.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity
+      }));
+      await actualizarOrden(idOrdenActual, "Ciudad de Guatemala, Zona 10", productosActualizar);
+
     } catch (error) {
       console.error('Error agregando producto al carrito:', error);
       if (error.response?.status === 401 || error.response?.status === 403) {
@@ -94,7 +119,7 @@ function ProductosDestacados({ carrito, setCarrito }) {
           <div className="product-card-content">
             <h2>{producto.name}</h2>
             <p>{producto.description}</p>
-            <p className="price">Q{producto.price}</p>            
+            <p className="price">Q{producto.price}</p>
             <button className="add-to-cart" onClick={() => handleAgregarAlCarrito(producto)}>
               Agregar al carrito
             </button>
@@ -102,6 +127,7 @@ function ProductosDestacados({ carrito, setCarrito }) {
         </div>
       ))}
 
+      {/* Modal de Error o Sesión Expirada */}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -120,7 +146,7 @@ function ProductosDestacados({ carrito, setCarrito }) {
           p: 4,
           textAlign: 'center'
         }}>
-          <Typography id="modal-error-title" variant="h5" color="error" fontWeight="bold">
+          <Typography id="modal-error-title" variant="h5" component="h2" color="error" fontWeight="bold">
             {isSessionExpired ? "⚠️ Sesión Expirada" : "❌ Error"}
           </Typography>
           <Typography id="modal-error-description" sx={{ mt: 2 }}>

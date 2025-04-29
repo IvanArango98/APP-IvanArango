@@ -15,7 +15,7 @@ function getAuthHeaders() {
 
 // ✅ Agregar al carrito
 export async function agregarAlCarrito(productId, quantity = 1) {
-  try {
+  try {    
     const response = await axios.post(`${API_URL}/api/cart/add`, {
       productId,
       quantity
@@ -54,11 +54,10 @@ export async function actualizarCarrito(cartItemId, productId, quantity) {
 
 // ✅ Eliminar producto del carrito
 export async function eliminarDelCarrito(productId, orderId) {
-  try {
-    console.log(productId,orderId)
+  try {    
     const response = await axios.delete(`${API_URL}/api/cart/remove`, {
       params: {
-        productId,
+        productId: productId,
         OrderId: orderId
       },
       headers: getAuthHeaders(),
@@ -73,9 +72,10 @@ export async function eliminarDelCarrito(productId, orderId) {
   }
 }
 
+
 // ✅ Crear una nueva orden
 export async function crearOrden(shippingAddress, products) {
-  try {
+  try {    
     const response = await axios.post(`${API_URL}/api/orders/createOrder`, {
       shippingAddress,
       products
@@ -83,6 +83,12 @@ export async function crearOrden(shippingAddress, products) {
       headers: getAuthHeaders(),
       withCredentials: true
     });
+
+    const idOrden = response.data?.value?.idOrden;
+    if (idOrden) {
+      localStorage.setItem('idOrden', idOrden);
+    }
+
     return response.data;
   } catch (error) {
     if (error.response?.status === 401 || error.response?.status === 403) {
@@ -93,8 +99,8 @@ export async function crearOrden(shippingAddress, products) {
 }
 
 // ✅ Actualizar orden existente
-export async function actualizarOrden(orderId, shippingAddress, products) {
-  try {
+export async function actualizarOrden(orderId, shippingAddress, products) {  
+  try {    
     const response = await axios.put(`${API_URL}/api/orders/updateOrder`, {
       shippingAddress,
       products
@@ -114,7 +120,7 @@ export async function actualizarOrden(orderId, shippingAddress, products) {
 
 // ✅ Confirmar orden
 export async function confirmarOrden(orderId, shippingAddress) {
-  try {
+  try {    
     const response = await axios.post(`${API_URL}/api/orders/confirmOrder`, {
       orderId,
       shippingAddress
@@ -130,3 +136,49 @@ export async function confirmarOrden(orderId, shippingAddress) {
     throw error;
   }
 }
+
+  // ✅ Obtener productos del carrito
+  export async function getCart() {
+    try {
+      const response = await axios.get('http://localhost:8080/api/cart/list', {
+        headers: getAuthHeaders(),
+        withCredentials: true
+      });
+      return response.data; // aquí ya retorna el value con todos los productos
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        cerrarSesion();
+      }
+      throw error;
+    }
+  }
+
+  //eliminar orden
+  export async function eliminarOrden(orderId) {
+    try {
+      // ✅ Si no recibimos un orderId, lo buscamos en localStorage
+      if (!orderId) {
+        orderId = localStorage.getItem('idOrden');
+      }
+
+      const response = await axios.delete(`${API_URL}/api/orders/deleteOrder`, {
+        params: {          
+          orderId: orderId
+        },
+        headers: getAuthHeaders(),
+        withCredentials: true
+      });
+      
+      if (orderId) {
+        localStorage.removeItem('idOrden');
+      }
+  
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        cerrarSesion();
+      }
+      throw error;
+    }
+  }
+  
