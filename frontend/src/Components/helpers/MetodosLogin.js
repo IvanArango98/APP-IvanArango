@@ -48,11 +48,18 @@ export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal
     .then(response => {
         if (response.data.code === 200) {
             const token = response.data.value.token;
+            const loginId = response.data.value.loginId;
+
+            // Guardamos el token en cookies
             cookies.set("_s", token, {
                 path: "/",
                 expires: calculaExpiracionSesion()
-            }); 
+            });
 
+            // Guardamos el loginId en localStorage
+            localStorage.setItem('loginId', loginId);
+
+            // Redirigimos a MainPage
             window.location.href = "/MainPage";
         } else {
             setErrorMessage(response.data.message || "Error de autenticación");
@@ -68,3 +75,4 @@ export const InicioSesion = (Data, setOpenSpinner, setErrorMessage, setOpenModal
         setOpenSpinner(false);
     });
 };
+

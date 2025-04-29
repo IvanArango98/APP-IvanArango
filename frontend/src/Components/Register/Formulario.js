@@ -317,8 +317,7 @@ const FormularioRegistro = ({ setOpenSpinner }) => {
               >
                 Registrarme
               </Button>
-            </Grid>
-
+            </Grid>            
           </Grid>
 
           {/* Modal Final */}

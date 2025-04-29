@@ -12,7 +12,7 @@ const Navbar = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Tienda Deportiva
         </Typography>
-        <Button color="inherit">Perfil</Button>
+        <Button color="inherit" href='/EditarPerfil'>Perfil</Button>
         <Button color="inherit" onClick={cerrarSesion}>Cerrar Sesión</Button>
       </Toolbar>
     </AppBar>

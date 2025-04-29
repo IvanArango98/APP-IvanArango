@@ -47,7 +47,11 @@ const Register = () => {
     <img className="LogoLogin" src={Logo} alt="Logo Online Shopping" />
     <Box component="form" noValidate sx={{ width: '100%' }}>
       <FormularioRegistro setOpenSpinner={setOpenSpinner} />
-    </Box>    
+    </Box>  
+    <div style={{color:'transparent'}}>s</div>
+    <Link href="/InicioSesion">
+    Regresar
+    </Link>  
     <Copyright sx={{ mt: 5, mb: 2 }} />
   </Box>
 </Container>

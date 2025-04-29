@@ -4,6 +4,7 @@ import PrivateRoute from '../privateRoute/privateroute';
 import Login from '../Login/index';
 import Register from '../Register/index';
 import Main from '../MainPage/index';
+import PerfilUsuario from "../EditProfile/index"
 
 export default function AppRouter() {    
     function NotFound() {
@@ -30,6 +31,15 @@ export default function AppRouter() {
                     element={
                         <PrivateRoute>
                             <Main />
+                        </PrivateRoute>
+                    } 
+                />
+
+                <Route 
+                    path="/EditarPerfil" 
+                    element={
+                        <PrivateRoute>
+                            <PerfilUsuario />
                         </PrivateRoute>
                     } 
                 />
