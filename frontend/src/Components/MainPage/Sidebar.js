@@ -13,7 +13,8 @@ import {
   Button,
   Modal,
   useMediaQuery,
-  Fab
+  Fab,
+  TextField
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -43,6 +44,8 @@ const Sidebar = ({
   const [errorMessage, setErrorMessage] = useState('');
   const isMobile = useMediaQuery('(max-width:600px)');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [direccionEnvio, setDireccionEnvio] = useState('');
+
 
   const eliminarProducto = async (idProducto) => {
     try {
@@ -90,7 +93,7 @@ const Sidebar = ({
         setOpenErrorModal(true);
         return;
       }
-      await confirmarOrden(idOrden, 'Ciudad de Guatemala, Zona 10');
+      await confirmarOrden(idOrden, direccionEnvio); // 👈 usar dirección ingresada
       setOpenSuccessModal(true);
       setCarrito([]);
       setIdOrden(null);
@@ -125,133 +128,170 @@ const Sidebar = ({
   return (
     <>
       <Drawer
-  variant={isMobile ? 'temporary' : variant}
-  anchor={isMobile ? 'right' : anchor}
-  open={isMobile ? mobileOpen : open}
-  onClose={() => {
-    if (isMobile) setMobileOpen(false);
-    else if (onClose) onClose();
-  }}
-  ModalProps={{ keepMounted: true }}
-  sx={{
-    width: isMobile ? '100%' : 320,
-    [`& .MuiDrawer-paper`]: {
-      width: isMobile ? '100%' : 320,
-      height: isMobile ? '100vh' : '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      boxSizing: 'border-box',
-      backgroundColor: '#fff',
-      padding: 2
-    }
-  }}
->
-        <Typography variant="h6" fontWeight="bold">Carrito de Compras</Typography>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto', mt: 2 }}>
-        <List>
-          {carrito.map((item) => (
-            <ListItem key={item.id} sx={{ px: 0 }} secondaryAction={
-              <IconButton edge="end" aria-label="delete" onClick={() => eliminarProducto(item.id)} sx={{ color: '#10069f' }}>
-                <DeleteIcon style={{ color: 'white' }} />
-              </IconButton>
-            }>
-              <ListItemAvatar>
-                <Avatar src={item.imagen} variant="rounded" />
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.nombre}
-                secondary={`Cantidad: ${item.cantidad} | Precio: Q${item.precio}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-        </Box>
-
-        <Box sx={{ mt: 2 }}>
-        <Typography variant="h6" sx={{ mt: 2 }} fontWeight="bold">
-          Total: Q{total.toFixed(2)}
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column', mt: 2 }}>
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={() => setOpenConfirmModal(true)}
-          disabled={total <= 0}
-          sx={{
-            backgroundColor: '#10069f',
-            color: 'white',
-            '&.Mui-disabled': {
-              backgroundColor: '#10069f',
-              color: 'white',
-              opacity: 0.5
-            }
-          }}
-        >
-          CONFIRMAR PEDIDO
-        </Button>
-
-        <Button
-        fullWidth
-        variant="outlined"
-        onClick={() => setOpenCancelModal(true)} // ⬅️ Mostrar modal
-        disabled={total <= 0}
+        variant={isMobile ? 'temporary' : variant}
+        anchor={isMobile ? 'right' : anchor}
+        open={isMobile ? mobileOpen : open}
+        onClose={() => {
+          if (isMobile) setMobileOpen(false);
+          else if (onClose) onClose();
+        }}
+        ModalProps={{ keepMounted: true }}
         sx={{
-          borderColor: '#10069f',
-          color: 'white',
-          backgroundColor: '#10069f',
-          '&:hover': {
-            backgroundColor: '#0e058f'
-          },
-          '&.Mui-disabled': {
-            backgroundColor: '#10069f',
-            color: 'white',
-            opacity: 0.5,
-            borderColor: '#10069f'
+          width: isMobile ? '100%' : 320,
+          [`& .MuiDrawer-paper`]: {
+            width: isMobile ? '100%' : 320,
+            height: isMobile ? '100vh' : '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            boxSizing: 'border-box',
+            backgroundColor: '#fff',
+            padding: 2
           }
         }}
       >
-        CANCELAR COMPRA
-      </Button>
-        </Box>
+        <Typography variant="h6" fontWeight="bold">Carrito de Compras</Typography>
+
+        <Box sx={{ flexGrow: 1, overflowY: 'auto', mt: 2 }}>
+          <List>
+            {carrito.map((item) => (
+              <ListItem key={item.id} sx={{ px: 0 }} secondaryAction={
+                <IconButton edge="end" aria-label="delete" onClick={() => eliminarProducto(item.id)} sx={{ color: '#10069f' }}>
+                  <DeleteIcon style={{ color: 'white' }} />
+                </IconButton>
+              }>
+                <ListItemAvatar>
+                  <Avatar src={item.imagen} variant="rounded" />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={item.nombre}
+                  secondary={`Cantidad: ${item.cantidad} | Precio: Q${item.precio}`}
+                />
+              </ListItem>
+            ))}
+          </List>
         </Box>
 
-        {/* Modales */}
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="h6" sx={{ mt: 2 }} fontWeight="bold">
+            Total: Q{total.toFixed(2)}
+          </Typography>
+
+          <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column', mt: 2 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => setOpenConfirmModal(true)}
+              disabled={total <= 0}
+              sx={{
+                backgroundColor: '#10069f',
+                color: 'white',
+                '&.Mui-disabled': {
+                  backgroundColor: '#10069f',
+                  color: 'white',
+                  opacity: 0.5
+                }
+              }}
+            >
+              CONFIRMAR PEDIDO
+            </Button>
+
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => setOpenCancelModal(true)}
+              disabled={total <= 0}
+              sx={{
+                borderColor: '#10069f',
+                color: 'white',
+                backgroundColor: '#10069f',
+                '&:hover': {
+                  backgroundColor: '#0e058f'
+                },
+                '&.Mui-disabled': {
+                  backgroundColor: '#10069f',
+                  color: 'white',
+                  opacity: 0.5,
+                  borderColor: '#10069f'
+                }
+              }}
+            >
+              CANCELAR COMPRA
+            </Button>
+          </Box>
+        </Box>
+
+        {/*  Modal Confirmar Pedido */}
         <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
           <Box sx={{ ...modalBoxStyle }}>
-            <Typography variant="h6" fontWeight="bold">¿Estás seguro?</Typography>
-            <Typography sx={{ mt: 2 }}>¿Deseas confirmar este pedido?</Typography>
-            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-              <Button variant="contained" color="success" onClick={() => { confirmarCompra(); setOpenConfirmModal(false); }}>Sí, confirmar</Button>
-              <Button variant="outlined" color="error" onClick={() => setOpenConfirmModal(false)} style={{color:"white"}}>Cancelar</Button>
+            <Typography variant="h6" fontWeight="bold">¿Confirmar pedido?</Typography>
+
+            <Typography sx={{ mt: 2 }}>Ingresa tu dirección de envío:</Typography>
+
+            <TextField
+              fullWidth
+              variant="standard"
+              placeholder="Ej: 2a avenida 5-50 zona 10"
+              value={direccionEnvio}
+              onChange={(e) => setDireccionEnvio(e.target.value)}
+              sx={{ mt: 2 }}
+            />
+
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
+            <Button
+              variant="contained"
+              disabled={direccionEnvio.trim().length < 6}
+              onClick={() => { confirmarCompra(); setOpenConfirmModal(false); }}
+              sx={{
+                width: 120,
+                backgroundColor: direccionEnvio.trim().length < 6 ? '#e0e0e0 !important' : '#2e7d32 !important',
+                color: direccionEnvio.trim().length < 6 ? 'gray' : 'white',
+                '&:hover': {
+                  backgroundColor: direccionEnvio.trim().length < 6 ? '#e0e0e0 !important' : '#1b5e20 !important',
+                },
+                cursor: direccionEnvio.trim().length < 6 ? 'not-allowed' : 'pointer'
+              }}
+            >
+              Confirmar
+            </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => setOpenConfirmModal(false)}
+                style={{ color: "white" }}
+              >
+                Cancelar
+              </Button>
             </Box>
           </Box>
         </Modal>
 
+        {/* Modal Cancelar */}
         <Modal open={openCancelModal} onClose={() => setOpenCancelModal(false)}>
           <Box sx={{ ...modalBoxStyle }}>
             <Typography variant="h6" fontWeight="bold">¿Cancelar compra?</Typography>
             <Typography sx={{ mt: 2 }}>Esto eliminará todos los productos del carrito y la orden creada.</Typography>
             <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
               <Button variant="contained" color="error" onClick={() => { cancelarCompra(); setOpenCancelModal(false); }}>Sí, cancelar</Button>
-              <Button variant="outlined" onClick={() => setOpenCancelModal(false)} style={{color:"white"}}>No, volver</Button>
+              <Button variant="outlined" onClick={() => setOpenCancelModal(false)} style={{ color: "white" }}>No, volver</Button>
             </Box>
           </Box>
         </Modal>
 
+        {/* Modal Pedido Confirmado */}
         <Modal open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
           <Box sx={{ ...modalBoxStyle }}>
             <Typography variant="h6" color="green">¡Pedido Confirmado!</Typography>
             <Typography sx={{ mt: 2 }}>Gracias por tu compra.</Typography>
-            <Button sx={{ mt: 3 }} variant="contained" color="success" onClick={() => setOpenSuccessModal(false)} style={{color:"white"}}>Cerrar</Button>
+            <Button sx={{ mt: 3 }} variant="contained" color="success" onClick={() => setOpenSuccessModal(false)} style={{ color: "white" }}>Cerrar</Button>
           </Box>
         </Modal>
 
+        {/* Modal Error */}
         <Modal open={openErrorModal} onClose={() => setOpenErrorModal(false)}>
           <Box sx={{ ...modalBoxStyle, textAlign: 'center' }}>
             <Typography variant="h5" color="error" fontWeight="bold">❌ Error</Typography>
             <Typography sx={{ mt: 2 }}>{errorMessage}</Typography>
-            <Button sx={{ mt: 3 }} variant="contained" color="error" onClick={() => setOpenErrorModal(false)} style={{color:"white"}}>Cerrar</Button>
+            <Button sx={{ mt: 3 }} variant="contained" color="error" onClick={() => setOpenErrorModal(false)} style={{ color: "white" }}>Cerrar</Button>
           </Box>
         </Modal>
       </Drawer>

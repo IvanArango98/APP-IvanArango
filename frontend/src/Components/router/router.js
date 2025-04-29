@@ -4,7 +4,7 @@ import PrivateRoute from '../privateRoute/privateroute';
 import Login from '../Login/index';
 import Register from '../Register/index';
 import Main from '../MainPage/index';
-import PerfilUsuario from "../EditProfile/index"
+import PerfilTabs from "../ProfileUser"
 
 export default function AppRouter() {    
     function NotFound() {
@@ -39,7 +39,7 @@ export default function AppRouter() {
                     path="/EditarPerfil" 
                     element={
                         <PrivateRoute>
-                            <PerfilUsuario />
+                            <PerfilTabs />
                         </PrivateRoute>
                     } 
                 />

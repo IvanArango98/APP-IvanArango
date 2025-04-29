@@ -59,8 +59,7 @@ const PerfilUsuario = () => {
   }
 
   return (    
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Navbar />
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>      
       <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 4 }}>
         <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}>
           Perfil de Usuario
