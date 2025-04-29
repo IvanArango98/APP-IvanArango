@@ -1,3 +1,4 @@
+// Sidebar.js
 import React, { useState } from 'react';
 import {
   Drawer,
@@ -10,9 +11,12 @@ import {
   IconButton,
   Avatar,
   Button,
-  Modal
+  Modal,
+  useMediaQuery,
+  Fab
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import {
   eliminarDelCarrito,
   actualizarOrden,
@@ -23,7 +27,7 @@ import {
 import { cerrarSesion } from '../Helpers/MetodosLogin';
 
 const Sidebar = ({
-  carrito,
+  carrito = [],
   setCarrito,
   idOrden,
   setIdOrden,
@@ -34,7 +38,11 @@ const Sidebar = ({
 }) => {
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [openErrorModal, setOpenErrorModal] = useState(false);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [openCancelModal, setOpenCancelModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const isMobile = useMediaQuery('(max-width:600px)');
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const eliminarProducto = async (idProducto) => {
     try {
@@ -61,6 +69,7 @@ const Sidebar = ({
           })));
         } else {
           await eliminarOrden(idOrden ?? item.idOrden);
+          setIdOrden(null);
         }
       }
     } catch (error) {
@@ -96,110 +105,187 @@ const Sidebar = ({
     }
   };
 
+  const cancelarCompra = async () => {
+    try {
+      for (const item of carrito) {
+        await eliminarDelCarrito(item.id, item.cartItemId);
+      }
+      await eliminarOrden(idOrden);
+      setCarrito([]);
+      setIdOrden(null);
+    } catch (error) {
+      console.error('Error al cancelar la compra:', error);
+      setErrorMessage('❌ No se pudo cancelar la compra.');
+      setOpenErrorModal(true);
+    }
+  };
+
   const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 
   return (
-    <Drawer
-      variant={variant}
-      anchor={anchor}
-      open={variant === 'temporary' ? open : undefined}
-      onClose={onClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{
-        width: anchor === 'bottom' ? '100%' : 320,
-        height: anchor === 'bottom' ? 300 : '100vh',
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: {
-          width: anchor === 'bottom' ? '100%' : 320,
-          height: anchor === 'bottom' ? 300 : '100vh',
-          boxSizing: 'border-box',
-          backgroundColor: '#fff',
-          padding: 2,
-          borderTop: anchor === 'bottom' ? '1px solid #ddd' : 'none'
-        }
-      }}
-    >
-      <Typography variant="h6" gutterBottom style={{fontWeight:"bold"}}>
-        Carrito de Compras
-      </Typography>
-
-      <List sx={{ maxHeight: 150, overflowY: 'auto' }}>
-        {carrito.map((item) => (
-          <ListItem
-            key={item.id}
-            sx={{ px: 0 }}
-            secondaryAction={
-              <IconButton
-                edge="end"               
-                aria-label="delete"
-                onClick={() => eliminarProducto(item.id)}
-                sx={{ color: '#10069f' }}
-              >
-                <DeleteIcon style={{color:"white"}}/>
+    <>
+      <Drawer
+  variant={isMobile ? 'temporary' : variant}
+  anchor={isMobile ? 'right' : anchor}
+  open={isMobile ? mobileOpen : open}
+  onClose={() => {
+    if (isMobile) setMobileOpen(false);
+    else if (onClose) onClose();
+  }}
+  ModalProps={{ keepMounted: true }}
+  sx={{
+    width: isMobile ? '100%' : 320,
+    [`& .MuiDrawer-paper`]: {
+      width: isMobile ? '100%' : 320,
+      height: isMobile ? '100vh' : '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box',
+      backgroundColor: '#fff',
+      padding: 2
+    }
+  }}
+>
+        <Typography variant="h6" fontWeight="bold">Carrito de Compras</Typography>
+        <Box sx={{ flexGrow: 1, overflowY: 'auto', mt: 2 }}>
+        <List>
+          {carrito.map((item) => (
+            <ListItem key={item.id} sx={{ px: 0 }} secondaryAction={
+              <IconButton edge="end" aria-label="delete" onClick={() => eliminarProducto(item.id)} sx={{ color: '#10069f' }}>
+                <DeleteIcon style={{ color: 'white' }} />
               </IconButton>
+            }>
+              <ListItemAvatar>
+                <Avatar src={item.imagen} variant="rounded" />
+              </ListItemAvatar>
+              <ListItemText
+                primary={item.nombre}
+                secondary={`Cantidad: ${item.cantidad} | Precio: Q${item.precio}`}
+              />
+            </ListItem>
+          ))}
+        </List>
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+        <Typography variant="h6" sx={{ mt: 2 }} fontWeight="bold">
+          Total: Q{total.toFixed(2)}
+        </Typography>
+
+        <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column', mt: 2 }}>
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={() => setOpenConfirmModal(true)}
+          disabled={total <= 0}
+          sx={{
+            backgroundColor: '#10069f',
+            color: 'white',
+            '&.Mui-disabled': {
+              backgroundColor: '#10069f',
+              color: 'white',
+              opacity: 0.5
             }
-          >
-            <ListItemAvatar>
-              <Avatar src={item.imagen} variant="rounded" />
-            </ListItemAvatar>
-            <ListItemText
-              primary={item.nombre}
-              secondary={`Cantidad: ${item.cantidad} | Precio: Q${item.precio}`}
-            />
-          </ListItem>
-        ))}
-      </List>
+          }}
+        >
+          CONFIRMAR PEDIDO
+        </Button>
 
-      <Typography variant="h6" sx={{ mt: 2 }} style={{fontWeight:"bold"}}>
-        Total: Q{total.toFixed(2)}
-      </Typography>
-
-      <Button
+        <Button
         fullWidth
-        variant="contained"
-        onClick={confirmarCompra}
+        variant="outlined"
+        onClick={() => setOpenCancelModal(true)} // ⬅️ Mostrar modal
         disabled={total <= 0}
         sx={{
-          mt: 3,
-          backgroundColor: '#10069f',
+          borderColor: '#10069f',
           color: 'white',
+          backgroundColor: '#10069f',
+          '&:hover': {
+            backgroundColor: '#0e058f'
+          },
           '&.Mui-disabled': {
             backgroundColor: '#10069f',
             color: 'white',
-            opacity: 0.5
+            opacity: 0.5,
+            borderColor: '#10069f'
           }
         }}
       >
-        CONFIRMAR PEDIDO
+        CANCELAR COMPRA
       </Button>
-
-
-      {/* Modales */}
-      <Modal open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
-        <Box sx={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)', width: 400,
-          bgcolor: 'background.paper', borderRadius: '12px', boxShadow: 24, p: 4
-        }}>
-          <Typography variant="h6" color="green">¡Pedido Confirmado!</Typography>
-          <Typography sx={{ mt: 2 }}>Gracias por tu compra.</Typography>
-          <Button sx={{ mt: 3 }} variant="contained" color="success" onClick={() => setOpenSuccessModal(false)}>Cerrar</Button>
         </Box>
-      </Modal>
-
-      <Modal open={openErrorModal} onClose={() => setOpenErrorModal(false)}>
-        <Box sx={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)', width: 400,
-          bgcolor: 'background.paper', borderRadius: '12px', boxShadow: 24, p: 4, textAlign: 'center'
-        }}>
-          <Typography variant="h5" color="error" fontWeight="bold">❌ Error</Typography>
-          <Typography sx={{ mt: 2 }}>{errorMessage}</Typography>
-          <Button sx={{ mt: 3 }} variant="contained" color="error" onClick={() => setOpenErrorModal(false)}>Cerrar</Button>
         </Box>
-      </Modal>
-    </Drawer>
+
+        {/* Modales */}
+        <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
+          <Box sx={{ ...modalBoxStyle }}>
+            <Typography variant="h6" fontWeight="bold">¿Estás seguro?</Typography>
+            <Typography sx={{ mt: 2 }}>¿Deseas confirmar este pedido?</Typography>
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+              <Button variant="contained" color="success" onClick={() => { confirmarCompra(); setOpenConfirmModal(false); }}>Sí, confirmar</Button>
+              <Button variant="outlined" color="error" onClick={() => setOpenConfirmModal(false)} style={{color:"white"}}>Cancelar</Button>
+            </Box>
+          </Box>
+        </Modal>
+
+        <Modal open={openCancelModal} onClose={() => setOpenCancelModal(false)}>
+          <Box sx={{ ...modalBoxStyle }}>
+            <Typography variant="h6" fontWeight="bold">¿Cancelar compra?</Typography>
+            <Typography sx={{ mt: 2 }}>Esto eliminará todos los productos del carrito y la orden creada.</Typography>
+            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
+              <Button variant="contained" color="error" onClick={() => { cancelarCompra(); setOpenCancelModal(false); }}>Sí, cancelar</Button>
+              <Button variant="outlined" onClick={() => setOpenCancelModal(false)} style={{color:"white"}}>No, volver</Button>
+            </Box>
+          </Box>
+        </Modal>
+
+        <Modal open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
+          <Box sx={{ ...modalBoxStyle }}>
+            <Typography variant="h6" color="green">¡Pedido Confirmado!</Typography>
+            <Typography sx={{ mt: 2 }}>Gracias por tu compra.</Typography>
+            <Button sx={{ mt: 3 }} variant="contained" color="success" onClick={() => setOpenSuccessModal(false)} style={{color:"white"}}>Cerrar</Button>
+          </Box>
+        </Modal>
+
+        <Modal open={openErrorModal} onClose={() => setOpenErrorModal(false)}>
+          <Box sx={{ ...modalBoxStyle, textAlign: 'center' }}>
+            <Typography variant="h5" color="error" fontWeight="bold">❌ Error</Typography>
+            <Typography sx={{ mt: 2 }}>{errorMessage}</Typography>
+            <Button sx={{ mt: 3 }} variant="contained" color="error" onClick={() => setOpenErrorModal(false)} style={{color:"white"}}>Cerrar</Button>
+          </Box>
+        </Modal>
+      </Drawer>
+
+      {isMobile && (
+        <Fab
+          color="primary"
+          onClick={() => setMobileOpen(true)}
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+            zIndex: 2000,
+            backgroundColor: '#10069f',
+            '&:hover': { backgroundColor: '#0e058f' }
+          }}
+        >
+          <ShoppingCartIcon />
+        </Fab>
+      )}
+    </>
   );
+};
+
+const modalBoxStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  borderRadius: '12px',
+  boxShadow: 24,
+  p: 4
 };
 
 export default Sidebar;

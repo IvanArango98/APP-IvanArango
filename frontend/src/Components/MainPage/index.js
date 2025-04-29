@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Box, Fab } from '@mui/material';
+import { Box, Grid, useMediaQuery } from '@mui/material';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import BannerPrincipal from './BannerPrincipal';
 import ProductosDestacados from './ProductosDestacados';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const MainPage = () => {
   const [carrito, setCarrito] = useState([]);
   const [idOrden, setIdOrden] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (carrito.length === 0) {
@@ -21,63 +19,51 @@ const MainPage = () => {
   }, [carrito]);
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      {/* Sidebar permanente para escritorio */}
+    <Box sx={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
+      {/* Sidebar fijo en escritorio */}
       {!isMobile && (
         <Sidebar
           carrito={carrito}
           setCarrito={setCarrito}
           idOrden={idOrden}
           setIdOrden={setIdOrden}
+          variant="permanent"
+          anchor="left"
         />
       )}
 
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+      {/* Contenedor principal */}
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         <Navbar />
-        <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
+
+        <Box sx={{ p: 2 }}>
           <BannerPrincipal />
-          <Grid container spacing={2} sx={{ mt: 1, height: '100%' }}>
-            <Grid item xs={12} md={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
               <ProductosDestacados
                 carrito={carrito}
                 setCarrito={setCarrito}
                 idOrden={idOrden}
                 setIdOrden={setIdOrden}
+                openSidebar={() => setSidebarOpen(true)}
               />
             </Grid>
           </Grid>
         </Box>
       </Box>
 
-      {/* Botón flotante en móviles */}
+      {/* Sidebar móvil */}
       {isMobile && (
-        <>
-          <Fab
-            color="primary"
-            aria-label="carrito"
-            onClick={() => setDrawerOpen(true)}
-            sx={{
-              position: 'fixed',
-              bottom: 16,
-              right: 16,
-              backgroundColor: '#10069f'
-            }}
-          >
-            <ShoppingCartIcon />
-          </Fab>
-
-          {/* Drawer móvil */}
-          <Sidebar
-            carrito={carrito}
-            setCarrito={setCarrito}
-            idOrden={idOrden}
-            setIdOrden={setIdOrden}
-            open={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            variant="temporary"
-            anchor="bottom"
-          />
-        </>
+        <Sidebar
+          carrito={carrito}
+          setCarrito={setCarrito}
+          idOrden={idOrden}
+          setIdOrden={setIdOrden}
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          variant="temporary"
+          anchor="right"
+        />
       )}
     </Box>
   );
