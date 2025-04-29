@@ -150,39 +150,89 @@ const PerfilUsuario = () => {
                 ))}
 
                 {/* Botones */}
-                <Grid item xs={12} sx={{ mt: 4, textAlign: 'center' }}>
-                  {!editing ? (
-                    <>
-                      <Button
-                        variant="standard"
-                        onClick={() => navigate(-1)}
-                        sx={{ mr: 2 }}
-                        style={{color:"white"}}
-                      >
-                        Regresar
-                      </Button>
+                <Grid item xs={12} sx={{ mt: 4 }}>
+  <Box
+    sx={{
+      display: 'flex',
+      flexDirection: { xs: 'column', sm: 'row' },
+      gap: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    {!editing ? (
+      <>
+        <Button
+          sx={{
+            width: 180,
+            height: 48,
+            fontWeight: 'bold',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            color: 'white',
+            bgcolor: '#10069f',
+            '&:hover': { bgcolor: '#0e058f' },
+          }}
+          onClick={() => navigate(-1)}
+        >
+          Regresar
+        </Button>
 
-                      <Button variant="contained" onClick={() => setOpenConfirmEditModal(true)}>
-                        Editar Perfil
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        variant="standard"
-                        onClick={handleCancelEdit}
-                        sx={{ mr: 2 }}
-                        style={{color:"white"}}
-                      >
-                        Cancelar
-                      </Button>
+        <Button
+          sx={{
+            width: 180,
+            height: 48,
+            fontWeight: 'bold',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            color: 'white',
+            bgcolor: '#10069f',
+            '&:hover': { bgcolor: '#0e058f' },
+          }}
+          onClick={() => setOpenConfirmEditModal(true)}
+        >
+          Editar Perfil
+        </Button>
+      </>
+    ) : (
+      <>
+        <Button
+          sx={{
+            width: 180,
+            height: 48,
+            fontWeight: 'bold',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            color: 'white',
+            bgcolor: '#10069f',
+            '&:hover': { bgcolor: '#0e058f' },
+          }}
+          onClick={handleCancelEdit}
+        >
+          Cancelar
+        </Button>
 
-                      <Button variant="contained" color="success" type="submit">
-                        Guardar Cambios
-                      </Button>
-                    </>
-                  )}
-                </Grid>
+        <Button
+          type="submit"
+          sx={{
+            width: 180,
+            height: 48,
+            fontWeight: 'bold',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            color: 'white',
+            bgcolor: 'success.main',
+            '&:hover': { bgcolor: 'success.dark' },
+          }}
+        >
+          Guardar Cambios
+        </Button>
+      </>
+    )}
+  </Box>
+</Grid>
+
+
               </Grid>
             </form>
           )}
