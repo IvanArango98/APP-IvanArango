@@ -58,15 +58,21 @@ const PerfilUsuario = () => {
     return <Typography variant="h6" sx={{ m: 4 }}>Cargando datos del usuario...</Typography>;
   }
 
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+  return (    
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
-
       <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 4 }}>
         <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}>
           Perfil de Usuario
         </Typography>
 
+        <Box
+            sx={{            
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >   
         <Formik
           initialValues={{
             id: userData.id || '',
@@ -102,7 +108,7 @@ const PerfilUsuario = () => {
                   { label: "Teléfono", name: "phoneNumber" },
                   { label: "Dirección", name: "address" }
                 ].map((field, index) => (
-                  <Grid item xs={12} md={6} key={index}>
+                  <Grid item size={6} key={index}>
                     <TextField
                       fullWidth
                       variant="standard"
@@ -128,7 +134,7 @@ const PerfilUsuario = () => {
                   { label: "Ciudad", name: "cityName" },
                   { label: "Municipalidad", name: "municipalityName" }
                 ].map((field, index) => (
-                  <Grid item xs={12} md={6} key={index}>
+                  <Grid item size={field.label === "Municipalidad" ? 12 : 6} key={index}>
                     <TextField
                       fullWidth
                       variant="standard"
@@ -182,6 +188,7 @@ const PerfilUsuario = () => {
             </form>
           )}
         </Formik>
+        </Box>
 
         {/* Modal Confirmar Editar */}
         <Modal
