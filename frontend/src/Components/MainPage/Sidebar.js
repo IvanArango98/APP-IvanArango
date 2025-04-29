@@ -281,8 +281,22 @@ const Sidebar = ({
         <Modal open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
           <Box sx={{ ...modalBoxStyle }}>
             <Typography variant="h6" color="green">¡Pedido Confirmado!</Typography>
-            <Typography sx={{ mt: 2 }}>Gracias por tu compra.</Typography>
-            <Button sx={{ mt: 3 }} variant="contained" color="success" onClick={() => setOpenSuccessModal(false)} style={{ color: "white" }}>Cerrar</Button>
+            <Typography sx={{ mt: 2 }}>Gracias por tu compra. El id de tu pedido es: {localStorage.getItem('idOrden')}</Typography>
+            <Button
+              sx={{ mt: 3 }}
+              variant="contained"
+              color="success"
+              onClick={() => {
+                setOpenSuccessModal(false);
+                const orderId = localStorage.getItem('idOrden');
+                if (orderId) {
+                  localStorage.removeItem('idOrden');
+                }
+              }}
+              style={{ color: "white" }}
+            >
+              Cerrar
+            </Button>
           </Box>
         </Modal>
 

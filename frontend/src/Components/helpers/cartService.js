@@ -168,11 +168,7 @@ export async function confirmarOrden(orderId, shippingAddress) {
         headers: getAuthHeaders(),
         withCredentials: true
       });
-      
-      if (orderId) {
-        localStorage.removeItem('idOrden');
-      }
-  
+          
       return response.data;
     } catch (error) {
       if (error.response?.status === 401 || error.response?.status === 403) {
