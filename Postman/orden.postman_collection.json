@@ -1,0 +1,510 @@
+{
+	"info": {
+		"_postman_id": "50acbaeb-e42f-46c0-9907-f63220481bf8",
+		"name": "orden",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5783245"
+	},
+	"item": [
+		{
+			"name": "Paso 1 - Agregar producto al carrito ",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": 1,\r\n  \"quantity\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/cart/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cart",
+						"add"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request POST 'http://localhost:8080/api/cart/add' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n  \"productId\": 1,\r\n  \"quantity\": 2\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 1.1 (Opcional) Actualizar cantidad de producto en el carrito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cartItemId\": 6,\r\n  \"productId\": 1,\r\n  \"quantity\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/cart/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cart",
+						"update"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request PUT 'http://localhost:8080/api/cart/update' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n  \"productId\": 1,\r\n  \"quantity\": 5\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 1.2 (Opcional) Eliminar producto del carrito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/cart/remove?productId=4&OrderId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cart",
+						"remove"
+					],
+					"query": [
+						{
+							"key": "productId",
+							"value": "4"
+						},
+						{
+							"key": "OrderId",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request DELETE 'http://localhost:8080/api/cart/remove?productId=1' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "1.3 (Opcional) - Listar productos del carrito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/cart/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"cart",
+						"list"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request GET 'http://localhost:8080/api/cart/list' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 2 - Crear nueva orden manual",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"shippingAddress\": \"Ciudad de Guatemala, Zona 10\",  \r\n  \"products\": [\r\n    {\r\n      \"productId\": 4,\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/orders/createOrder",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"createOrder"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request POST 'http://localhost:8080/api/orders/createOrder' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n  \"shippingAddress\": \"Ciudad de Guatemala, Zona 10\",\r\n  \"status\": \"PENDING\",\r\n  \"totalAmount\": 250.00\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 2.1 - Confirmar compra desde carrito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"orderId\": 4,\r\n  \"shippingAddress\": \"Ciudad de Guatemala, Zona 17\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/orders/confirmOrder",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"confirmOrder"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request POST 'http://localhost:8080/api/orders/confirmOrder' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n  \"orderId\": 17,\r\n  \"shippingAddress\": \"Ciudad de Guatemala, Zona 10\"\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Opcion 2.2 (Opcional) - Actualizar orden manualmente",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"shippingAddress\": \"Ciudad de Guatemala, Zona 9\",  \r\n  \"products\": [\r\n    {\r\n      \"productId\": 1,\r\n      \"quantity\": 5\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/orders/updateOrder?orderId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"updateOrder"
+					],
+					"query": [
+						{
+							"key": "orderId",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request PUT 'http://localhost:8080/api/orders/updateOrder?orderId=17' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n  \"shippingAddress\": \"Nueva dirección, Guatemala\",\r\n  \"status\": \"SHIPPED\",\r\n  \"totalAmount\": 300.00\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 2.3 (OpciionL)- Consultar una orden por ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/orders/getOrder?id=3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"getOrder"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "3"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request DELETE 'http://localhost:8080/api/orders/deleteOrder?orderId=17' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Paso 2.4(Opcional) - Consultar todas las órdenes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/orders/getAllOrders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"getAllOrders"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request GET 'http://localhost:8080/api/orders/getAllOrders' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Opcion 2.5(Opcional)- Eliminar una orden",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {TU_TOKEN_AQUI}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/orders/deleteOrder?orderId=40",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"orders",
+						"deleteOrder"
+					],
+					"query": [
+						{
+							"key": "orderId",
+							"value": "40"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request DELETE 'http://localhost:8080/api/orders/deleteOrder?orderId=17' \\\r\n--header 'Authorization: Bearer {TU_TOKEN_AQUI}'\r\n"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFyYW5nbyIsImlhdCI6MTc0NTk0MjQzOCwiZXhwIjoxNzQ1OTQzMTU4fQ.LsjOhf2b94skVhBa3aL65nuq8JXLI9xWdJaUKUnJJnQ",
+			"type": "string"
+		}
+	]
+}

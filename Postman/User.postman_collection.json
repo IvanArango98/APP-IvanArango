@@ -1,0 +1,194 @@
+{
+	"info": {
+		"_postman_id": "8e6b6105-b2ef-4211-b67f-d4fb70aeb9a5",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5783245"
+	},
+	"item": [
+		{
+			"name": "creacion usuario",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"firstName\":\"ivan\",\"secondName\":\"andres\",\"firstLastName\":\"ivan\",\"secondLastName\":\"andres\",\"email\":\"iaarangos@yahoo.es\",\"phoneNumber\":\"54149591\",\"dateOfBirth\":\"1998-05-05\",\"address\":\"2 calle 9.71\",\"country\":{\"name\":\"Guatemala\",\"code\":1},\"city\":{\"name\":\"Guatemala\",\"code\":1},\"municipality\":{\"name\":\"Guatemala\",\"code\":1},\"countryName\":\"Guatemala\",\"countryCode\":1,\"cityName\":\"Guatemala\",\"cityCode\":1,\"municipalityName\":\"Guatemala\",\"municipalityCode\":1,\"transactionType\":\"CC\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/createUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"createUser"
+					]
+				},
+				"description": "Generated from cURL: curl --location 'http://localhost:8080/api/users/create' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n    \"firstName\": \"Juan\",\r\n    \"secondName\": \"Carlos\",\r\n    \"firstLastName\": \"Pérez\",\r\n    \"secondLastName\": \"Gómez\",\r\n    \"email\": \"juan.perez@example.com\",\r\n    \"phoneNumber\": \"1234567890\",\r\n    \"dateOfBirth\": \"1990-05-15\",\r\n    \"address\": \"Av. Reforma 1234\",\r\n    \"countryName\": \"Guatemala\",\r\n    \"countryCode\": 502,\r\n    \"cityName\": \"Ciudad de Guatemala\",\r\n    \"cityCode\": 1,\r\n    \"municipalityName\": \"Zona 10\",\r\n    \"municipalityCode\": 10\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar usuario",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 14,\r\n    \"firstName\": \"Juan Updated\",\r\n    \"secondName\": \"Carlos Updated\",\r\n    \"firstLastName\": \"Pérez Updated\",\r\n    \"secondLastName\": \"Gómez Updated\",\r\n    \"email\": \"juan.perez.updated@example.com\",\r\n    \"phoneNumber\": \"9876543210\",\r\n    \"dateOfBirth\": \"1991-06-20\",\r\n    \"address\": \"Av. Reforma 5678\",\r\n    \"countryName\": \"Guatemala\",\r\n    \"countryCode\": 502,\r\n    \"cityName\": \"Ciudad de Guatemala\",\r\n    \"cityCode\": 1,\r\n    \"municipalityName\": \"Zona 14\",\r\n    \"municipalityCode\": 14\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/updateUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"updateUser"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request PUT 'http://localhost:8080/api/users/update' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n    \"id\": 1,\r\n    \"firstName\": \"Juan Updated\",\r\n    \"secondName\": \"Carlos Updated\",\r\n    \"firstLastName\": \"Pérez Updated\",\r\n    \"secondLastName\": \"Gómez Updated\",\r\n    \"email\": \"juan.perez.updated@example.com\",\r\n    \"phoneNumber\": \"9876543210\",\r\n    \"dateOfBirth\": \"1991-06-20\",\r\n    \"address\": \"Av. Reforma 5678\",\r\n    \"countryName\": \"Guatemala\",\r\n    \"countryCode\": 502,\r\n    \"cityName\": \"Ciudad de Guatemala\",\r\n    \"cityCode\": 1,\r\n    \"municipalityName\": \"Zona 14\",\r\n    \"municipalityCode\": 14\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "eliminar usuario",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/deleteUser?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"deleteUser"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request DELETE 'http://localhost:8080/api/users/delete?id=1'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "obtener usuario",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFyYW5nbyIsImlhdCI6MTc0NTg5NDgzMiwiZXhwIjoxNzQ1ODk1NTUyfQ.BWRZC7z7iTu21LDI4Km8Zk3s5JKUdGvxtNiWQXkjekg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/getUser?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"getUser"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request GET 'http://localhost:8080/api/users/get?id=1'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "obtener todos los usuarios",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFyYW5nbyIsImlhdCI6MTc0NTkzOTMxMCwiZXhwIjoxNzQ1OTQwMDMwfQ.IiWaB8ChNwCMbmz9p5x4XMUhMLKcZ-bXowV7RnLguK4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/users/getAllUsers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"getAllUsers"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request GET 'http://localhost:8080/api/users/get?id=1'\r\n"
+			},
+			"response": []
+		}
+	]
+}

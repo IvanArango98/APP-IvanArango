@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "c4a6b95c-584c-496a-81f4-8cbb4773b52a",
+		"name": "login",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5783245"
+	},
+	"item": [
+		{
+			"name": "registrar login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"iaarangos@yahoo.es\",\r\n    \"userName\": \"ivarango\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/login/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"login",
+						"register"
+					]
+				},
+				"description": "Generated from cURL: curl --location 'http://localhost:8080/api/login/register' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"email\": \"juan.perez@example.com\",\r\n    \"userName\": \"juanperez2024\",\r\n    \"password\": \"123456\"\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Autenticar usuario",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\": \"ivarango\",\r\n    \"password\": \"1234567\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/login/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"login",
+						"authenticate"
+					]
+				},
+				"description": "Generated from cURL: curl --location 'http://localhost:8080/api/login/authenticate' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"userName\": \"juanperez2024\",\r\n    \"password\": \"123456\"\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "cambiar la contraseña",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"ivan.arango@example.com\",\r\n    \"password\": \"1234567\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/login/changePassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"login",
+						"changePassword"
+					]
+				},
+				"description": "Generated from cURL: curl --location 'http://localhost:8080/api/login/changePassword' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"email\": \"juan.perez@example.com\",\r\n    \"password\": \"nuevaPasswordSegura123\"\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "forgot password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"ivanandres613@gmail.com\",\r\n    \"userName\": null,\r\n    \"password\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/login/forgotPassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"login",
+						"forgotPassword"
+					]
+				},
+				"description": "Generated from cURL: curl --location 'http://localhost:8080/api/login/forgotPassword' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"email\": \"correo@ejemplo.com\",\r\n    \"userName\": null,\r\n    \"password\": null\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "cambiar la contraseña",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"40b2262e-2510-11f0-9320-5ce0c536c3dc\",\r\n    \"newPassword\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/login/resetPassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"login",
+						"resetPassword"
+					]
+				},
+				"description": "Generated from cURL: curl --location 'http://localhost:8080/api/login/resetPassword' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"token\": \"6b97db4b-963e-4d6f-85ec-5d7c9d57fd61\",\r\n    \"newPassword\": \"NuevaContraseña123!\"\r\n}'\r\n"
+			},
+			"response": []
+		}
+	]
+}

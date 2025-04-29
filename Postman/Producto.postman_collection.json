@@ -1,0 +1,239 @@
+{
+	"info": {
+		"_postman_id": "62c8af66-9c4e-45fe-bb01-5df93a677110",
+		"name": "Producto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5783245"
+	},
+	"item": [
+		{
+			"name": "Crear Producto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Nike futbol cr7\",\r\n  \"description\": \"Los jugadores pueden optar por tachones de fútbol rápido que ofrezcan un mejor control del balón, mientras que los corredores deberían buscan tenis que maximicen\",\r\n  \"imageURL\": \"https://i.eurosport.com/2015/03/25/1442967-30856291-2560-1440.jpg\",\r\n  \"price\": 149.99,\r\n  \"stockQuantity\": 20\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/createProduct",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"createProduct"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request POST 'http://localhost:8080/api/products/createProduct' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n    \"name\": \"Producto Ejemplo\",\r\n    \"description\": \"Descripción del producto de ejemplo\",\r\n    \"imageURL\": \"https://example.com/imagen.jpg\",\r\n    \"price\": 99.99,\r\n    \"stockQuantity\": 10\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": " Actualizar Producto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 5,\r\n    \"name\": \"Nike mercurial victory vi\",\r\n    \"description\": \"Tacos clasicos\",\r\n    \"imageURL\": \"https://images.prodirectsport.com/productimages/Main/153680.jpg\",\r\n    \"price\": 199.99,\r\n    \"stockQuantity\": 40\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/products/updateProduct",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"updateProduct"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request PUT 'http://localhost:8080/api/products/updateProduct' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n    \"id\": 1,\r\n    \"name\": \"Producto Actualizado\",\r\n    \"description\": \"Nueva descripción actualizada\",\r\n    \"imageURL\": \"https://example.com/nueva-imagen.jpg\",\r\n    \"price\": 149.99,\r\n    \"stockQuantity\": 20\r\n}'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar Producto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products/deleteProduct?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"deleteProduct"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request DELETE 'http://localhost:8080/api/products/deleteProduct?id=1'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Producto por ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products/getProduct?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"getProduct"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location --request GET 'http://localhost:8080/api/products/getProduct?id=1'\r\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Todos los Productos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/products/getAllProducts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"products",
+						"getAllProducts"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request GET 'http://localhost:8080/api/products/getAllProducts'\r\n"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpdmFyYW5nbyIsImlhdCI6MTc0NTkwMjM1OSwiZXhwIjoxNzQ1OTAzMDc5fQ.xZMXziYG6t0qAdafZDpPW-9W3Y0B2oI6NBGjjuDVbvM",
+			"type": "string"
+		}
+	]
+}
